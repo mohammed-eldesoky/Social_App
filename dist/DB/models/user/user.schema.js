@@ -29,7 +29,7 @@ exports.UserSchema = new mongoose_1.Schema({
     password: {
         type: String,
         required: function () {
-            if (this.userAgent == enum_1.USER_AGENT.google) {
+            if (this.userAgent === enum_1.USER_AGENT.google) {
                 return false;
             }
             return true;

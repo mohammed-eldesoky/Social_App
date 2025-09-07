@@ -32,8 +32,8 @@ export const UserSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: function () {
-        if (this.userAgent == USER_AGENT.google) {
+      required: function (this: any) {
+        if (this.userAgent === USER_AGENT.google) {
           return false;
         }
         return true;
