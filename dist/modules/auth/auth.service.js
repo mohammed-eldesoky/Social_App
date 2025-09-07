@@ -8,7 +8,7 @@ class AuthService {
     userRepository = new user_repository_1.UserRepository();
     authFactory = new factory_1.AuthFactory();
     constructor() { }
-    async register(req, res, next) {
+    register = async (req, res, next) => {
         //get data from req
         const registterDTO = req.body;
         //check user existance
@@ -27,7 +27,8 @@ class AuthService {
         return res.status(201).json({
             message: "User created successfully",
             success: true,
+            data: createdUser,
         });
-    }
+    };
 }
 exports.default = new AuthService(); //single ton

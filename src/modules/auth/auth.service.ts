@@ -10,7 +10,7 @@ class AuthService {
   private authFactory = new AuthFactory();
   constructor() {}
 
-  async register(req: Request, res: Response, next: NextFunction) {
+   register= async(req: Request, res: Response, next: NextFunction)=> {
     //get data from req
     const registterDTO: RegistterDTO = req.body;
     //check user existance
@@ -31,6 +31,7 @@ class AuthService {
     return res.status(201).json({
       message: "User created successfully",
       success: true,
+      data: createdUser,
     });
   }
 }
