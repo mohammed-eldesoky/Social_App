@@ -15,5 +15,5 @@ function bootstrap(app, express) {
     app.use("/{*dummy}", (req, res, next) => {
         return res.status(404).json({ message: "invalid roueter", success: false });
     });
-    (0, connection_1.connectDB)();
+    (0, connection_1.connectDB)(); //operation buffering
 }

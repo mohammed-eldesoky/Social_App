@@ -18,5 +18,5 @@ app.use("/{*dummy}",(req,res,next)=>{
     return  res.status(404).json({ message: "invalid roueter",success:false });
 })
 
-connectDB();
+connectDB(); //operation buffering
 }
