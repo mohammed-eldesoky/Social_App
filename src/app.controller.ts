@@ -1,5 +1,6 @@
 import {type Express } from "express";
 import { authRouter } from "./modules";
+import { connectDB } from "./DB/connection";
 
 export function bootstrap(app:Express,express:any){
 //parsing data
@@ -16,4 +17,6 @@ app.use("/auth",authRouter)
 app.use("/{*dummy}",(req,res,next)=>{
     return  res.status(404).json({ message: "invalid roueter",success:false });
 })
+
+connectDB();
 }
