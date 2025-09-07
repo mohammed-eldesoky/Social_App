@@ -4,6 +4,8 @@ const error_1 = require("../../utils/error");
 const user_repository_1 = require("../../DB/models/user/user.repository");
 const factory_1 = require("./factory");
 const email_1 = require("../../utils/email");
+const hash_1 = require("../../utils/hash");
+const enum_1 = require("../../utils/common/enum");
 class AuthService {
     // private dbService  = new DBService<IUser>(User);
     userRepository = new user_repository_1.UserRepository();
@@ -44,6 +46,27 @@ class AuthService {
             message: "User created successfully",
             success: true,
             data: createdUser,
+        });
+    };
+    //____________________________________________________________
+    login = async (req, res, next) => {
+        const loginDTO = req.body;
+        // 1- check if user exists
+        const user = await this.userRepository.exist({ email: loginDTO.email });
+        if (!user) {
+            throw new error_1.NotAuthorizedException("user not found");
+        }
+        // 2- check password (local accounts only)
+        if (user.userAgent === enum_1.USER_AGENT.local) {
+            const isPasswordValid = (0, hash_1.compareHash)(loginDTO.password, user.password);
+            if (!isPasswordValid) {
+                throw new error_1.NotAuthorizedException("Invalid credentials");
+            }
+        }
+        // 3- send response
+        return res.status(200).json({
+            message: "Login successfully",
+            success: true,
         });
     };
 }

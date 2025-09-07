@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { RegistterDTO } from "./auth.dto";
-import { ConflictException } from "../../utils/error";
+import { LoginDTO, RegistterDTO } from "./auth.dto";
+import { ConflictException, NotAuthorizedException } from "../../utils/error";
 import { UserRepository } from "../../DB/models/user/user.repository";
 import { AuthFactory } from "./factory";
 import { sendEmail } from "../../utils/email";
+import { compareHash } from "../../utils/hash";
+import { USER_AGENT } from "../../utils/common/enum";
 
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
@@ -53,6 +55,33 @@ class AuthService {
       data: createdUser,
     });
   };
+
+  //____________________________________________________________
+ login = async (req: Request, res: Response, next: NextFunction) => {
+  const loginDTO: LoginDTO = req.body;
+
+  // 1- check if user exists
+  const user = await this.userRepository.exist({email:loginDTO.email});
+  if (!user) {
+    throw new NotAuthorizedException("user not found");
+  }
+
+  // 2- check password (local accounts only)
+  if (user.userAgent === USER_AGENT.local) {
+    const isPasswordValid = compareHash(loginDTO.password, user.password);
+    if (!isPasswordValid) {
+      throw new  NotAuthorizedException("Invalid credentials");
+    }
+  }
+
+
+  // 3- send response
+  return res.status(200).json({
+    message: "Login successfully",
+    success: true,
+  });
+};
+
 }
 
 export default new AuthService(); //single ton

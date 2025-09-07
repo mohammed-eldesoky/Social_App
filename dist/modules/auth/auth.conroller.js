@@ -7,6 +7,7 @@ const express_1 = require("express");
 const auth_service_1 = __importDefault(require("./auth.service"));
 const router = (0, express_1.Router)();
 router.post("/register", auth_service_1.default.register);
+router.post("/login", auth_service_1.default.login);
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 exports.default = router;
