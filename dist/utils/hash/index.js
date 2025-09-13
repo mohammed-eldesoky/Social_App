@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.compareHash = exports.generateHash = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 //hash password
-const generateHash = (planText) => {
-    return bcryptjs_1.default.hashSync(planText, 10);
+const generateHash = async (planText) => {
+    return await bcryptjs_1.default.hash(planText, 10);
 };
 exports.generateHash = generateHash;
 //compare password
-const compareHash = (planText, hash) => {
-    return bcryptjs_1.default.compareSync(planText, hash);
+const compareHash = async (planText, hash) => {
+    return await bcryptjs_1.default.compare(planText, hash);
 };
 exports.compareHash = compareHash;

@@ -23,7 +23,7 @@ class AuthService {
             throw new utils_1.ConflictException("User already exist");
         }
         //prepare data>>user document>> factory design pattern
-        const user = this.authFactory.register(registterDTO);
+        const user = await this.authFactory.register(registterDTO);
         //create user
         const createdUserdoc = await this.userRepository.create(user);
         //convert to plain object

@@ -7,11 +7,11 @@ import { User } from "../entity";
 //factory pattern
 export class AuthFactory {
 
-register(registterDTO:RegistterDTO){
+async register(registterDTO:RegistterDTO){
 const user = new User;
 user.fullName = registterDTO.fullName as string;
 user.email = registterDTO.email;
-user.password = generateHash(registterDTO.password);
+user.password = await generateHash(registterDTO.password);
 user.phoneNumber = registterDTO.phoneNumber as string; // encrypt [Remember]
 user.gender = GENDER_TYPES.male;
 user.role = SYS_ROLES.user;
