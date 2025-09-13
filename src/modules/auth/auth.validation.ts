@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GENDER_TYPES, USER_AGENT } from "../../utils/common/enum";
+import { GENDER_TYPES, USER_AGENT } from "../../utils";
 import { RegistterDTO } from "./auth.dto";
 
 // register validaton  schema

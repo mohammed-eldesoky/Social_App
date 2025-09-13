@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerSchema = void 0;
 const zod_1 = require("zod");
-const enum_1 = require("../../utils/common/enum");
+const utils_1 = require("../../utils");
 // register validaton  schema
 // all fields by default are required
 exports.registerSchema = zod_1.z.object({
@@ -10,5 +10,5 @@ exports.registerSchema = zod_1.z.object({
     email: zod_1.z.email(),
     password: zod_1.z.string(),
     phoneNumber: zod_1.z.string().min(11).max(11),
-    gender: zod_1.z.enum(enum_1.GENDER_TYPES),
+    gender: zod_1.z.enum(utils_1.GENDER_TYPES),
 });

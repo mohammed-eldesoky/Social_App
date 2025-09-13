@@ -1,7 +1,7 @@
 import type { Express, NextFunction , Response,Request} from "express";
 import { authRouter, userRouter } from "./modules";
-import { connectDB } from "./DB/connection";
-import { AppError } from "./utils/error";
+import { connectDB } from "./DB";
+import { AppError } from "./utils";
 
 export function bootstrap(app:Express,express:any){
 //parsing data

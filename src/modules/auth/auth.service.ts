@@ -4,15 +4,14 @@ import {
   BadRequestException,
   ConflictException,
   NotAuthorizedException,
-} from "../../utils/error";
-import { UserRepository } from "../../DB/models/user/user.repository";
+} from "../../utils";
+import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
-import { sendEmail } from "../../utils/email";
-import { compareHash } from "../../utils/hash";
-import { USER_AGENT } from "../../utils/common/enum";
-import * as authValidation from "./auth.validation";
-import { log } from "console";
-import { map } from "zod/mini";
+import { sendEmail } from "../../utils";
+import { compareHash } from "../../utils";
+import { USER_AGENT } from "../../utils";
+
+
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
   private userRepository = new UserRepository();
