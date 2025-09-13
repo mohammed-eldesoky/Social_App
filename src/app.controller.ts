@@ -1,5 +1,5 @@
 import type { Express, NextFunction , Response,Request} from "express";
-import { authRouter } from "./modules";
+import { authRouter, userRouter } from "./modules";
 import { connectDB } from "./DB/connection";
 import { AppError } from "./utils/error";
 
@@ -10,6 +10,7 @@ app.use(express.json());
 //auth
 app.use("/auth",authRouter)
 //users
+app.use("/user",userRouter)
 //posts
 
 //comments  

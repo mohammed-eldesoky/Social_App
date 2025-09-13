@@ -1,3 +1,3 @@
 import  authRouter from "./auth/auth.conroller"
-
-export {authRouter}
+import userRouter from "./user/user.controller"
+export {authRouter,userRouter}
