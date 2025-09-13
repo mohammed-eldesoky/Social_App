@@ -16,4 +16,12 @@ function bootstrap(app, express) {
         return res.status(404).json({ message: "invalid roueter", success: false });
     });
     (0, connection_1.connectDB)(); //operation buffering
+    // GLOBAL ERROR HANDLER
+    app.use((error, req, res, next) => {
+        return res.status(error.statusCode | 500).json({
+            message: error.message,
+            success: false,
+            errorDettails: error.errorDettails
+        });
+    });
 }

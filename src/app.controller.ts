@@ -1,6 +1,7 @@
-import {type Express } from "express";
+import type { Express, NextFunction , Response,Request} from "express";
 import { authRouter } from "./modules";
 import { connectDB } from "./DB/connection";
+import { AppError } from "./utils/error";
 
 export function bootstrap(app:Express,express:any){
 //parsing data
@@ -19,4 +20,17 @@ app.use("/{*dummy}",(req,res,next)=>{
 })
 
 connectDB(); //operation buffering
+
+ // GLOBAL ERROR HANDLER
+app.use((error:AppError , req:Request , res:Response , next:NextFunction)=>{
+return res.status(error.statusCode| 500).json({
+    message:error.message,
+    success:false,
+    errorDettails:error.errorDettails
+
+})
+
+})
+
+
 }
