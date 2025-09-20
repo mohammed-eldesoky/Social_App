@@ -23,7 +23,12 @@ exports.UserSchema = new mongoose_1.Schema({
         type: String,
         lowercase: true,
         unique: true,
-        required: true,
+        required: function () {
+            if (this.phoneNumber) {
+                return false;
+            }
+            return true;
+        },
         trim: true,
     },
     password: {
@@ -36,7 +41,15 @@ exports.UserSchema = new mongoose_1.Schema({
         }, // Password is required if userAgent is not 'google'
     },
     credenialUpdatedAt: Date,
-    phoneNumber: String,
+    phoneNumber: {
+        type: String,
+        required: function () {
+            if (this.email) {
+                return false;
+            }
+            return true;
+        },
+    },
     role: {
         type: String,
         enum: enum_1.SYS_ROLES,

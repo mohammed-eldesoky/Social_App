@@ -7,8 +7,11 @@ const utils_1 = require("../../utils");
 // all fields by default are required
 exports.registerSchema = zod_1.z.object({
     fullName: zod_1.z.string().min(3).max(20), //TYPE assertion
-    email: zod_1.z.email(),
+    email: zod_1.z.email().optional(),
     password: zod_1.z.string(),
-    phoneNumber: zod_1.z.string().min(11).max(11),
+    phoneNumber: zod_1.z.string().min(11).max(11).optional(),
     gender: zod_1.z.enum(utils_1.GENDER_TYPES),
+}).refine((data) => data.email || data.phoneNumber, {
+    message: "Email or phone number is required",
+    path: ["email"]
 });

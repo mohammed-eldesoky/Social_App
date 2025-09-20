@@ -27,7 +27,12 @@ export const UserSchema = new Schema<IUser>(
       type: String,
       lowercase: true,
       unique: true,
-      required: true,
+      required: function (){
+        if(this.phoneNumber) {
+return false;
+        }
+        return true;
+      },
       trim: true,
     },
     password: {
@@ -40,7 +45,15 @@ export const UserSchema = new Schema<IUser>(
       }, // Password is required if userAgent is not 'google'
     },
     credenialUpdatedAt: Date,
-    phoneNumber: String,
+    phoneNumber:{
+      type: String,
+            required: function (){
+        if(this.email) {
+return false;
+        }
+        return true;
+      },
+    },
     role: {
       type: String,
       enum: SYS_ROLES,
