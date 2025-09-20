@@ -19,6 +19,7 @@ user.userAgent = USER_AGENT.local;
 user.otp = generateOtp();
 user.otpExpiryAt = generateOtpExpiryTime(5*60*1000) as unknown as Date ; //5 min
 user.credenialUpdatedAt = Date.now() as unknown as Date ;
+user.isVerified = false;
 return user;
 
 }

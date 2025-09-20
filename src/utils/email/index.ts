@@ -7,7 +7,7 @@ interface IEmail{
 }
 
 
-export async function sendEmail({to,subject,html}:IEmail) {
+export const sendEmail=  async  ({to,subject,html}:IEmail) => {
 // step:1 // create a transporter
 const transporter =  nodemailer.createTransport({
     host:"smtp.gmail.com",

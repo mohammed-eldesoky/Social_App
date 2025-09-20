@@ -19,6 +19,7 @@ class AuthFactory {
         user.otp = (0, otp_1.generateOtp)();
         user.otpExpiryAt = (0, otp_1.generateOtpExpiryTime)(5 * 60 * 1000); //5 min
         user.credenialUpdatedAt = Date.now();
+        user.isVerified = false;
         return user;
     }
 }

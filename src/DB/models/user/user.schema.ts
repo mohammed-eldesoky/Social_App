@@ -58,16 +58,22 @@ export const UserSchema = new Schema<IUser>(
     },
     otp: { type: String },
     otpExpiryAt: { type: Date },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
-  { timestamps: true , toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 //virtual fieldS
 
-UserSchema.virtual("fullName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
-}).set(function (value: string) {
+UserSchema.virtual("fullName")
+  .get(function () {
+    return `${this.firstName} ${this.lastName}`;
+  })
+  .set(function (value: string) {
     const [firstName, lastName] = value.split(" ");
-    this.firstName = firstName as string; //TYPE assertion 
-    this.lastName = lastName as string;//TYPE assertion 
-});
+    this.firstName = firstName as string; //TYPE assertion
+    this.lastName = lastName as string; //TYPE assertion
+  });

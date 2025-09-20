@@ -54,12 +54,18 @@ exports.UserSchema = new mongoose_1.Schema({
     },
     otp: { type: String },
     otpExpiryAt: { type: Date },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 //virtual fieldS
-exports.UserSchema.virtual("fullName").get(function () {
+exports.UserSchema.virtual("fullName")
+    .get(function () {
     return `${this.firstName} ${this.lastName}`;
-}).set(function (value) {
+})
+    .set(function (value) {
     const [firstName, lastName] = value.split(" ");
-    this.firstName = firstName; //TYPE assertion 
-    this.lastName = lastName; //TYPE assertion 
+    this.firstName = firstName; //TYPE assertion
+    this.lastName = lastName; //TYPE assertion
 });

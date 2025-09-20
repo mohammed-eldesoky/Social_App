@@ -13,4 +13,5 @@ public  gender !: GENDER_TYPES;
 public  userAgent !: USER_AGENT;
 public otp!: string;
 public  otpExpiryAt!: Date; //otp
+public  isVerified !: boolean;
 }
