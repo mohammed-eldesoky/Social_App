@@ -5,6 +5,7 @@ import {
   SYS_ROLES,
   USER_AGENT,
 } from "../../../utils/common/enum";
+import { sendEmail } from "../../../utils";
 // Define the User schema
 export const UserSchema = new Schema<IUser>(
   {
@@ -90,3 +91,16 @@ UserSchema.virtual("fullName")
     this.firstName = firstName as string; //TYPE assertion
     this.lastName = lastName as string; //TYPE assertion
   });
+
+
+UserSchema.pre("save",async function(next){
+    //send email
+
+  await  sendEmail({
+      to:this.email,
+      subject:" Confirm Your Account",
+      html:`<h1>Your OTP :${this.otp} </h1>
+      `
+    })
+next();
+})

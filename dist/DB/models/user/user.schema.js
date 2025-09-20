@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = void 0;
 const mongoose_1 = require("mongoose");
 const enum_1 = require("../../../utils/common/enum");
+const utils_1 = require("../../../utils");
 // Define the User schema
 exports.UserSchema = new mongoose_1.Schema({
     firstName: {
@@ -81,4 +82,14 @@ exports.UserSchema.virtual("fullName")
     const [firstName, lastName] = value.split(" ");
     this.firstName = firstName; //TYPE assertion
     this.lastName = lastName; //TYPE assertion
+});
+exports.UserSchema.pre("save", async function (next) {
+    //send email
+    await (0, utils_1.sendEmail)({
+        to: this.email,
+        subject: " Confirm Your Account",
+        html: `<h1>Your OTP :${this.otp} </h1>
+      `
+    });
+    next();
 });

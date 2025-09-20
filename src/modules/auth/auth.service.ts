@@ -37,22 +37,7 @@ class AuthService {
     const createdUserdoc =  await this.userRepository.create(user);
     //convert to plain object
     const createdUser = createdUserdoc.toObject();
-
-    // 4- send OTP via email
-    const htmlTemplate = `
-        <h1>Welcome to Social App 🎉</h1>
-        <p>Hi ${createdUser.email},</p>
-        <p>Your OTP code is: <strong>${createdUser.otp}</strong></p>
-        <p>This code will expire in 5 minutes.</p>
-      `;
-    //send email
-
-    await sendEmail({
-      to: createdUser.email,
-      subject: "Verify your email - Social App",
-      html: htmlTemplate,
-    });
-
+    
     //send response
 
     return res.status(201).json({
@@ -61,6 +46,8 @@ class AuthService {
       data: createdUser,
     });
   };
+
+
 
   //____________________________________________________________
   login = async (req: Request, res: Response, next: NextFunction) => {

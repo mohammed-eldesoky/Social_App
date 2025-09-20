@@ -5,7 +5,6 @@ const DB_1 = require("../../DB");
 const factory_1 = require("./factory");
 const utils_2 = require("../../utils");
 const utils_3 = require("../../utils");
-const utils_4 = require("../../utils");
 class AuthService {
     // private dbService  = new DBService<IUser>(User);
     userRepository = new DB_1.UserRepository();
@@ -28,19 +27,6 @@ class AuthService {
         const createdUserdoc = await this.userRepository.create(user);
         //convert to plain object
         const createdUser = createdUserdoc.toObject();
-        // 4- send OTP via email
-        const htmlTemplate = `
-        <h1>Welcome to Social App 🎉</h1>
-        <p>Hi ${createdUser.email},</p>
-        <p>Your OTP code is: <strong>${createdUser.otp}</strong></p>
-        <p>This code will expire in 5 minutes.</p>
-      `;
-        //send email
-        await (0, utils_2.sendEmail)({
-            to: createdUser.email,
-            subject: "Verify your email - Social App",
-            html: htmlTemplate,
-        });
         //send response
         return res.status(201).json({
             message: "User created successfully",
@@ -57,8 +43,8 @@ class AuthService {
             throw new utils_1.NotAuthorizedException("user not found");
         }
         // 2- check password (local accounts only)
-        if (user.userAgent === utils_4.USER_AGENT.local) {
-            const isPasswordValid = (0, utils_3.compareHash)(loginDTO.password, user.password);
+        if (user.userAgent === utils_3.USER_AGENT.local) {
+            const isPasswordValid = (0, utils_2.compareHash)(loginDTO.password, user.password);
             if (!isPasswordValid) {
                 throw new utils_1.NotAuthorizedException("Invalid credentials");
             }

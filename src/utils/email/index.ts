@@ -1,31 +1,21 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
+import { MailOptions } from "nodemailer/lib/json-transport";
 
-interface IEmail{
-    to:string,
-    subject:string,
-    html:string
-}
+export const sendEmail = async (mailOptions: MailOptions) => {
+  // step:1 // create a transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
 
-
-export const sendEmail=  async  ({to,subject,html}:IEmail) => {
-// step:1 // create a transporter
-const transporter =  nodemailer.createTransport({
-    host:"smtp.gmail.com",
-    port: 587,
-    auth:{
-        user:process.env.EMAIL_USER,
-        pass:process.env.EMAIL_PASS 
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
 
-});
-// step:2 // send email
-await transporter.sendMail({
-from:"Social App",
-to,
-subject,
-html,
-
-})
-
-}
-
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  mailOptions.from = process.env.EMAIL_USER ;
+  // step:2 // send email
+  await transporter.sendMail(mailOptions);
+};
