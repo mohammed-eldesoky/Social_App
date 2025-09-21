@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { LoginDTO, RegistterDTO } from "./auth.dto";
+import { LoginDTO, RegistterDTO, VerifyAccountDTO } from "./auth.dto";
 import {
   BadRequestException,
   ConflictException,
   NotAuthorizedException,
+  NotFoundException,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
 import { sendEmail } from "../../utils";
 import { compareHash } from "../../utils";
 import { USER_AGENT } from "../../utils";
-
+import { authProvider } from "./auth.provider";
 
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
@@ -34,10 +35,10 @@ class AuthService {
     //prepare data>>user document>> factory design pattern
     const user = await this.authFactory.register(registterDTO);
     //create user
-    const createdUserdoc =  await this.userRepository.create(user);
+    const createdUserdoc = await this.userRepository.create(user);
     //convert to plain object
     const createdUser = createdUserdoc.toObject();
-    
+
     //send response
 
     return res.status(201).json({
@@ -47,9 +48,7 @@ class AuthService {
     });
   };
 
-
-
-  //____________________________________________________________
+  //_______________________________________________________________________________________________
   login = async (req: Request, res: Response, next: NextFunction) => {
     const loginDTO: LoginDTO = req.body;
 
@@ -72,6 +71,31 @@ class AuthService {
       message: "Login successfully",
       success: true,
     });
+  };
+
+  //__________________________________________________________________________________________________
+
+  verifyAccount = async (req: Request, res: Response, next: NextFunction) => {
+    //get data from req
+    const verifyAccountDTO: VerifyAccountDTO = req.body;
+    //provider
+    await authProvider.checkOtp(verifyAccountDTO);
+
+    //updete user
+    await this.userRepository.update(
+      { email: verifyAccountDTO.email },
+      { isVerified: true, $unset: { otp: "", otpExpiryAt: "" } }
+    );
+
+// send response
+    return res.status(200).json({
+      message: "Account verified successfully",
+      success: true,
+    });
+
+
+
+
   };
 }
 

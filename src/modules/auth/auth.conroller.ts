@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/register",isValid(authvalidation.registerSchema), authService.register);
 router.post("/login", authService.login);
+router.post("/verify-account", authService.verifyAccount);
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 

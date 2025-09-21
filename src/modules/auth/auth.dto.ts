@@ -10,10 +10,17 @@ export interface RegistterDTO {
   gender: GENDER_TYPES;
 }
 
+//______________________login______________________//
 
 export interface LoginDTO {
 
   email: string;
   password: string;
  
+}
+
+//______________________verify account______________________//
+export interface VerifyAccountDTO {
+  email: string;
+  otp: string;
 }

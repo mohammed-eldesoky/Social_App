@@ -5,6 +5,7 @@ const DB_1 = require("../../DB");
 const factory_1 = require("./factory");
 const utils_2 = require("../../utils");
 const utils_3 = require("../../utils");
+const auth_provider_1 = require("./auth.provider");
 class AuthService {
     // private dbService  = new DBService<IUser>(User);
     userRepository = new DB_1.UserRepository();
@@ -34,7 +35,7 @@ class AuthService {
             data: createdUser,
         });
     };
-    //____________________________________________________________
+    //_______________________________________________________________________________________________
     login = async (req, res, next) => {
         const loginDTO = req.body;
         // 1- check if user exists
@@ -52,6 +53,20 @@ class AuthService {
         // 3- send response
         return res.status(200).json({
             message: "Login successfully",
+            success: true,
+        });
+    };
+    //__________________________________________________________________________________________________
+    verifyAccount = async (req, res, next) => {
+        //get data from req
+        const verifyAccountDTO = req.body;
+        //provider
+        await auth_provider_1.authProvider.checkOtp(verifyAccountDTO);
+        //updete user
+        await this.userRepository.update({ email: verifyAccountDTO.email }, { isVerified: true, $unset: { otp: "", otpExpiryAt: "" } });
+        // send response
+        return res.status(200).json({
+            message: "Account verified successfully",
             success: true,
         });
     };
