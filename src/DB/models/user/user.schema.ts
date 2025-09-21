@@ -94,13 +94,18 @@ UserSchema.virtual("fullName")
 
 
 UserSchema.pre("save",async function(next){
-    //send email
+// check if new email  or google login
+if(this.userAgent!=USER_AGENT.google && this.isNew==true){
 
+    //send email
   await  sendEmail({
+    from: `"Social App" <${process.env.EMAIL_USER}>`,
       to:this.email,
       subject:" Confirm Your Account",
       html:`<h1>Your OTP :${this.otp} </h1>
       `
     })
+}
+
 next();
 })

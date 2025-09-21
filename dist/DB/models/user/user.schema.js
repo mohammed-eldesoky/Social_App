@@ -84,12 +84,16 @@ exports.UserSchema.virtual("fullName")
     this.lastName = lastName; //TYPE assertion
 });
 exports.UserSchema.pre("save", async function (next) {
-    //send email
-    await (0, utils_1.sendEmail)({
-        to: this.email,
-        subject: " Confirm Your Account",
-        html: `<h1>Your OTP :${this.otp} </h1>
+    // check if new email  or google login
+    if (this.userAgent != enum_1.USER_AGENT.google && this.isNew == true) {
+        //send email
+        await (0, utils_1.sendEmail)({
+            from: `"Social App" <${process.env.EMAIL_USER}>`,
+            to: this.email,
+            subject: " Confirm Your Account",
+            html: `<h1>Your OTP :${this.otp} </h1>
       `
-    });
+        });
+    }
     next();
 });

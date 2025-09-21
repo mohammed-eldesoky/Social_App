@@ -17,7 +17,6 @@ const sendEmail = async (mailOptions) => {
             rejectUnauthorized: false,
         },
     });
-    mailOptions.from = process.env.EMAIL_USER;
     // step:2 // send email
     await transporter.sendMail(mailOptions);
 };
