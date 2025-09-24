@@ -18,5 +18,6 @@ __exportStar(require("./otp"), exports);
 __exportStar(require("./email"), exports);
 __exportStar(require("./hash"), exports);
 __exportStar(require("./error"), exports);
+__exportStar(require("./token"), exports);
 __exportStar(require("./common/enum"), exports);
 __exportStar(require("./common/interface"), exports);

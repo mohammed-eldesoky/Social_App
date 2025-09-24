@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("../../utils");
 const DB_1 = require("../../DB");
@@ -6,6 +9,7 @@ const factory_1 = require("./factory");
 const utils_2 = require("../../utils");
 const utils_3 = require("../../utils");
 const auth_provider_1 = require("./auth.provider");
+const token_model_1 = __importDefault(require("./../../DB/models/token/token.model"));
 class AuthService {
     // private dbService  = new DBService<IUser>(User);
     userRepository = new DB_1.UserRepository();
@@ -37,23 +41,40 @@ class AuthService {
     };
     //_______________________________________________________________________________________________
     login = async (req, res, next) => {
+        // 1- get data from body
         const loginDTO = req.body;
-        // 1- check if user exists
+        // 2- check if user exists
         const user = await this.userRepository.exist({ email: loginDTO.email });
         if (!user) {
-            throw new utils_1.NotAuthorizedException("user not found");
+            throw new utils_1.ForbiddentException("user not found");
         }
-        // 2- check password (local accounts only)
+        // 3- check password (local accounts only)
         if (user.userAgent === utils_3.USER_AGENT.local) {
-            const isPasswordValid = (0, utils_2.compareHash)(loginDTO.password, user.password);
+            const isPasswordValid = await (0, utils_2.compareHash)(loginDTO.password, user.password);
             if (!isPasswordValid) {
-                throw new utils_1.NotAuthorizedException("Invalid credentials");
+                throw new utils_1.ForbiddentException("Invalid credentials");
             }
         }
-        // 3- send response
+        //4-generate access token
+        const accessToken = (0, utils_1.generateToken)({ payload: { _id: user._id, role: user.role },
+            options: { expiresIn: "1d" }
+        });
+        //generate refresh token
+        const refreshToken = (0, utils_1.generateToken)({ payload: { _id: user._id, role: user.role },
+            options: { expiresIn: "7d" }
+        });
+        //token in db
+        token_model_1.default.create({
+            token: refreshToken,
+            user: user._id,
+            type: utils_1.TOKEN_TYPES.refresh,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        });
+        // 5- send response
         return res.status(200).json({
             message: "Login successfully",
             success: true,
+            data: { accessToken, refreshToken }
         });
     };
     //__________________________________________________________________________________________________

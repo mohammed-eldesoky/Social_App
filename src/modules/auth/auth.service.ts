@@ -7,6 +7,7 @@ import {
   NotFoundException,
   ForbiddentException,
   generateToken,
+  TOKEN_TYPES,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -14,6 +15,8 @@ import { sendEmail } from "../../utils";
 import { compareHash } from "../../utils";
 import { USER_AGENT } from "../../utils";
 import { authProvider } from "./auth.provider";
+import Token from './../../DB/models/token/token.model';
+
 
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
@@ -70,17 +73,30 @@ class AuthService {
       }
     }
     
-    //4-generate token
+    //4-generate access token
      const accessToken = generateToken({payload:{_id:user._id ,role:user.role},
       options:{expiresIn:"1d"}
       })
 
+    //generate refresh token
+     const refreshToken = generateToken({payload:{_id:user._id ,role:user.role},
+      options:{expiresIn:"7d"}
+      })
 
+    //token in db
+
+     Token.create({
+      token:refreshToken,
+      user:user._id,
+      type:TOKEN_TYPES.refresh,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+
+     })
     // 5- send response
     return res.status(200).json({
       message: "Login successfully",
       success: true,
-      data:{accessToken}
+      data:{accessToken,refreshToken}
     });
   };
 

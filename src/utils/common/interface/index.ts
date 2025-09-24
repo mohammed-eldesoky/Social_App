@@ -1,5 +1,5 @@
-import { GENDER_TYPES, SYS_ROLES, USER_AGENT } from "../../common/enum/index";
-
+import { GENDER_TYPES, SYS_ROLES, TOKEN_TYPES, USER_AGENT } from "../../common/enum/index";
+import { Types } from "mongoose";
  export interface IUser {
     firstName: string;
     lastName: string;
@@ -16,3 +16,11 @@ import { GENDER_TYPES, SYS_ROLES, USER_AGENT } from "../../common/enum/index";
   isVerified?:boolean
  }
 
+
+ // token 
+ export interface Itoken {
+   token: string;
+  user: Types.ObjectId; 
+  type: TOKEN_TYPES // enum
+  expiresAt: Date;
+ }

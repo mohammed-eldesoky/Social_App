@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.USER_AGENT = exports.GENDER_TYPES = exports.SYS_ROLES = void 0;
+exports.TOKEN_TYPES = exports.USER_AGENT = exports.GENDER_TYPES = exports.SYS_ROLES = void 0;
 var SYS_ROLES;
 (function (SYS_ROLES) {
     SYS_ROLES["admin"] = "admin";
@@ -18,3 +18,8 @@ var USER_AGENT;
     USER_AGENT["google"] = "google";
     USER_AGENT["facebook"] = "facebook";
 })(USER_AGENT || (exports.USER_AGENT = USER_AGENT = {}));
+var TOKEN_TYPES;
+(function (TOKEN_TYPES) {
+    TOKEN_TYPES["access"] = "access";
+    TOKEN_TYPES["refresh"] = "refresh";
+})(TOKEN_TYPES || (exports.TOKEN_TYPES = TOKEN_TYPES = {}));
