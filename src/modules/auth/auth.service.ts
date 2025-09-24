@@ -6,6 +6,7 @@ import {
   UnAuthorizedException,
   NotFoundException,
   ForbiddentException,
+  generateToken,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -68,11 +69,18 @@ class AuthService {
         throw new ForbiddentException("Invalid credentials");
       }
     }
+    
+    //4-generate token
+     const accessToken = generateToken({payload:{_id:user._id ,role:user.role},
+      options:{expiresIn:"1d"}
+      })
 
-    // 4- send response
+
+    // 5- send response
     return res.status(200).json({
       message: "Login successfully",
       success: true,
+      data:{accessToken}
     });
   };
 
