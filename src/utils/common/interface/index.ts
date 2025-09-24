@@ -5,7 +5,7 @@ import {
   TOKEN_TYPES,
   USER_AGENT,
 } from "../../common/enum/index";
-import { Types } from "mongoose";
+import { ObjectId, Types } from "mongoose";
 import { Request } from "express";
 export interface IUser {
   firstName: string;
@@ -46,4 +46,19 @@ declare module "express" {
   interface Request {
     user: IUser;
   }
+}
+
+//___________attachments__________
+export interface Iattachment {
+  url: string;
+  id: string;
+}
+
+
+// ______________post___________
+export interface Ipost {
+  userId:ObjectId,
+  content:string,
+  likes:ObjectId[],
+  attachments?:Iattachment[]
 }

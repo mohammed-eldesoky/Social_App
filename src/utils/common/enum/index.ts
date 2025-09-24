@@ -20,3 +20,13 @@ export enum USER_AGENT{
     access="access",
     refresh="refresh"
  }
+
+ export enum USER_REACTIONS{
+    like="like",
+    love="love",
+    haha="haha",
+    wow="wow",
+    sad="sad",
+    angry="angry",
+  
+ }
