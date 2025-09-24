@@ -3,8 +3,9 @@ import { LoginDTO, RegistterDTO, VerifyAccountDTO } from "./auth.dto";
 import {
   BadRequestException,
   ConflictException,
-  NotAuthorizedException,
+  UnAuthorizedException,
   NotFoundException,
+  ForbiddentException,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -50,23 +51,25 @@ class AuthService {
 
   //_______________________________________________________________________________________________
   login = async (req: Request, res: Response, next: NextFunction) => {
+    
+    // 1- get data from body
     const loginDTO: LoginDTO = req.body;
 
-    // 1- check if user exists
+    // 2- check if user exists
     const user = await this.userRepository.exist({ email: loginDTO.email });
     if (!user) {
-      throw new NotAuthorizedException("user not found");
+      throw new ForbiddentException("user not found");
     }
 
-    // 2- check password (local accounts only)
+    // 3- check password (local accounts only)
     if (user.userAgent === USER_AGENT.local) {
-      const isPasswordValid = compareHash(loginDTO.password, user.password);
+      const isPasswordValid = await compareHash(loginDTO.password, user.password);
       if (!isPasswordValid) {
-        throw new NotAuthorizedException("Invalid credentials");
+        throw new ForbiddentException("Invalid credentials");
       }
     }
 
-    // 3- send response
+    // 4- send response
     return res.status(200).json({
       message: "Login successfully",
       success: true,
