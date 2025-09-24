@@ -4,6 +4,7 @@ import {
   SYS_ROLES,
   TOKEN_TYPES,
   USER_AGENT,
+  USER_REACTIONS,
 } from "../../common/enum/index";
 import { ObjectId, Types } from "mongoose";
 import { Request } from "express";
@@ -54,11 +55,16 @@ export interface Iattachment {
   id: string;
 }
 
+// ___________reactions__________
+export interface Ireaction {
+  reaction: USER_REACTIONS;
+  userId: ObjectId;
+}
 
 // ______________post___________
 export interface Ipost {
   userId:ObjectId,
   content:string,
-  likes:ObjectId[],
+  reactions: Ireaction[],
   attachments?:Iattachment[]
 }

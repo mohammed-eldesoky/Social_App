@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
-import { Ipost, USER_REACTIONS } from "../../../utils";
+import { Ipost, Ireaction, USER_REACTIONS } from "../../../utils";
 
 //reaction schema
-const reactionSchema = new Schema({
+const reactionSchema = new Schema<Ireaction>({
     reaction: {
     type: String,
     enum: USER_REACTIONS ,
@@ -37,7 +37,7 @@ export const postSchema = new Schema<Ipost>(
       trim: true,
     },
 
-   likes:[reactionSchema ]
+   reactions:[reactionSchema ]
 
 
 

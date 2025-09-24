@@ -11,6 +11,7 @@ function bootstrap(app, express) {
     //users
     app.use("/user", modules_1.userRouter);
     //posts
+    app.use("/post", modules_1.postRouter);
     //comments  
     //messages
     app.use("/{*dummy}", (req, res, next) => {
@@ -18,11 +19,12 @@ function bootstrap(app, express) {
     });
     (0, DB_1.connectDB)(); //operation buffering
     // GLOBAL ERROR HANDLER
-    app.use((error, req, res, next) => {
-        return res.status(error.statusCode | 500).json({
+    const globalErrorHandler = (error, req, res, next) => {
+        return res.status(error.statusCode || 500).json({
             message: error.message,
             success: false,
-            errorDettails: error.errorDettails
+            errorDettails: error.errorDettails,
         });
-    });
+    };
+    app.use(globalErrorHandler);
 }

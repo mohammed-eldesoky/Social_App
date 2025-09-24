@@ -1,5 +1,5 @@
-import type { Express, NextFunction , Response,Request} from "express";
-import { authRouter, userRouter } from "./modules";
+import type { Express, NextFunction , Response,Request, ErrorRequestHandler} from "express";
+import { authRouter, postRouter, userRouter } from "./modules";
 import { connectDB } from "./DB";
 import { AppError } from "./utils";
 
@@ -12,7 +12,7 @@ app.use("/auth",authRouter)
 //users
 app.use("/user",userRouter)
 //posts
-
+app.use("/post",postRouter)
 //comments  
 //messages
 
@@ -23,15 +23,21 @@ app.use("/{*dummy}",(req,res,next)=>{
 connectDB(); //operation buffering
 
  // GLOBAL ERROR HANDLER
-app.use((error:AppError , req:Request , res:Response , next:NextFunction)=>{
-return res.status(error.statusCode| 500).json({
-    message:error.message,
-    success:false,
-    errorDettails:error.errorDettails
 
-})
+const globalErrorHandler: ErrorRequestHandler = (
+  error: AppError,
+  req: Express.Request ,
+  res: Response,
+  next: NextFunction
+) => {
+  return res.status(error.statusCode || 500).json({
+    message: error.message,
+    success: false,
+    errorDettails: error.errorDettails,
+  });
+};
 
-})
+app.use(globalErrorHandler);
 
 
 }
