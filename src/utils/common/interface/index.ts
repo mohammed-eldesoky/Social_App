@@ -9,6 +9,7 @@ import {
 import { ObjectId, Types } from "mongoose";
 import { Request } from "express";
 export interface IUser {
+  _id: ObjectId;
   firstName: string;
   lastName: string;
   fullName?: string;

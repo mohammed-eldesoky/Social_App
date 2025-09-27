@@ -6,9 +6,10 @@ class postFactory {
     // any factory pattern create or update
     createPost(postDTO, user) {
         const newPost = new entity_1.Post();
-        // newPost.userId=user._id
+        newPost.userId = user._id;
         newPost.reactions = [];
         newPost.attachments = [];
+        newPost.content = postDTO.content;
         return newPost;
     }
     ;
