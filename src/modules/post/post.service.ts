@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { PostDTO } from "./post.dto";
 import { postFactory } from "./factory/index";
 import { PostRepository } from "../../DB/models/post/post.repository";
-import { NotFoundException } from "../../utils";
+import { NotFoundException, USER_REACTIONS } from "../../utils";
 
 class PostService {
   private readonly postRepository = new PostRepository();
@@ -48,24 +48,39 @@ class PostService {
 
       await this.postRepository.update(
         { _id: id },
-        { $push: { reactions:{ userId ,reaction}} }
+        {
+          $push: {
+            reactions: {
+              userId,
+              reaction: [null, undefined, ""].includes(reaction)
+                ? USER_REACTIONS.like
+                : reaction,
+            },
+          },
+        }
       );
     }
-    else{
-     await this.postRepository.update({
-        _id: id,"reactions.userId":userId},
-        {$set:{"reactions.$.reaction":reaction}})
-        // if user reacted before just update the reaction
+    // delete reaction
+    else if ([undefined, null, ""].includes(reaction)) {
+      await this.postRepository.update(
+        { _id: id },
+        { $pull: { reactions: postExist.reactions[userReactionIndex] } }
+      );
+
+      // if user reacted before just update the reaction
+    } else {
+      await this.postRepository.update(
+        {
+          _id: id,
+          "reactions.userId": userId,
+        },
+        { $set: { "reactions.$.reaction": reaction } }
+      );
     }
 
     //4- send response
     res.sendStatus(204); // no content
   };
-
-
-
-
-
 }
 
 export default new PostService();

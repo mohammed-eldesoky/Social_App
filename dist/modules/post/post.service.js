@@ -39,13 +39,27 @@ class PostService {
         });
         if (userReactionIndex == -1) {
             //3- add new reaction
-            await this.postRepository.update({ _id: id }, { $push: { reactions: { userId, reaction } } });
+            await this.postRepository.update({ _id: id }, {
+                $push: {
+                    reactions: {
+                        userId,
+                        reaction: [null, undefined, ""].includes(reaction)
+                            ? utils_1.USER_REACTIONS.like
+                            : reaction,
+                    },
+                },
+            });
+        }
+        // delete reaction
+        else if ([undefined, null, ""].includes(reaction)) {
+            await this.postRepository.update({ _id: id }, { $pull: { reactions: postExist.reactions[userReactionIndex] } });
+            // if user reacted before just update the reaction
         }
         else {
             await this.postRepository.update({
-                _id: id, "reactions.userId": userId
+                _id: id,
+                "reactions.userId": userId,
             }, { $set: { "reactions.$.reaction": reaction } });
-            // if user reacted before just update the reaction
         }
         //4- send response
         res.sendStatus(204); // no content
