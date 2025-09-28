@@ -11,4 +11,6 @@ const router = (0, express_1.Router)();
 router.post("/", (0, middleware_1.isAuthenticated)(), post_service_1.default.createPost);
 // react to post
 router.patch("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.reactPost);
+// get specific post
+router.get("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.getSpecificPost);
 exports.default = router;

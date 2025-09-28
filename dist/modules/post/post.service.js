@@ -64,5 +64,28 @@ class PostService {
         //4- send response
         res.sendStatus(204); // no content
     };
+    // ___________________________ get specific post ___________________________________//
+    getSpecificPost = async (req, res, next) => {
+        //Get data from req
+        const { id } = req.params; //post id
+        //check if post exists
+        const postExist = await this.postRepository.getOne({ _id: id }, {}, {
+            populate: [
+                { path: "userId", select: "fullName firstName lastName " },
+                { path: "reactions.userId", select: "fullName firstName lastName " },
+                // don't forget to populate comments userId
+            ],
+        });
+        //fail case
+        if (!postExist) {
+            throw new utils_1.NotFoundException("post not found");
+        }
+        //success case
+        return res.status(200).json({
+            message: "post fetched successfully",
+            success: true,
+            data: { post: postExist },
+        });
+    };
 }
 exports.default = new PostService();
