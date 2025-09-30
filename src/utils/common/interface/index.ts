@@ -64,8 +64,19 @@ export interface Ireaction {
 
 // ______________post___________
 export interface Ipost {
-  userId:ObjectId,
-  content:string,
-  reactions: Ireaction[],
-  attachments?:Iattachment[]
+  userId: ObjectId;
+  content: string;
+  reactions: Ireaction[];
+  attachments?: Iattachment[];
+}
+
+// ______________comment___________
+export interface Icomment {
+  userId: ObjectId;
+  postId: ObjectId;
+  parentsIds: ObjectId[];
+  content: string;
+  reactions: Ireaction[];
+  attachments: Iattachment[];
+  mentions?: ObjectId[];
 }
