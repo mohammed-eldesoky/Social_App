@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postSchema = void 0;
+exports.postSchema = exports.reactionSchema = void 0;
 const mongoose_1 = require("mongoose");
 const utils_1 = require("../../../utils");
 //reaction schema
-const reactionSchema = new mongoose_1.Schema({
+exports.reactionSchema = new mongoose_1.Schema({
     reaction: {
         type: String,
         enum: utils_1.USER_REACTIONS,
@@ -33,5 +33,5 @@ exports.postSchema = new mongoose_1.Schema({
         },
         trim: true,
     },
-    reactions: [reactionSchema]
+    reactions: [exports.reactionSchema],
 }, { timestamps: true });

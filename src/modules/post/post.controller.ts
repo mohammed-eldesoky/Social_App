@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { isAuthenticated } from "../../middleware";
 import postService from "./post.service";
+import { commentRouter } from "..";
 
 const router = Router();
 //create post
@@ -11,5 +12,10 @@ router.patch("/:id", isAuthenticated(), postService.reactPost);
 
 // get specific post
 router.get("/:id", isAuthenticated(), postService.getSpecificPost);
+
+/**
+ * @route_Comment
+ */
+router.use("/:postId/comment", commentRouter);
 
 export default router;

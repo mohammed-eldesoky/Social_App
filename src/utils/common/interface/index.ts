@@ -64,6 +64,7 @@ export interface Ireaction {
 
 // ______________post___________
 export interface Ipost {
+  _id:ObjectId;
   userId: ObjectId;
   content: string;
   reactions: Ireaction[];
@@ -72,6 +73,7 @@ export interface Ipost {
 
 // ______________comment___________
 export interface Icomment {
+  _id:ObjectId;
   userId: ObjectId;
   postId: ObjectId;
   parentsIds: ObjectId[];
