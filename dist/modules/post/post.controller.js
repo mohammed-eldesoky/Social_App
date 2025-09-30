@@ -7,9 +7,10 @@ const express_1 = require("express");
 const middleware_1 = require("../../middleware");
 const post_service_1 = __importDefault(require("./post.service"));
 const __1 = require("..");
+const post_vallidation_1 = require("./post.vallidation");
 const router = (0, express_1.Router)();
 //create post
-router.post("/", (0, middleware_1.isAuthenticated)(), post_service_1.default.createPost);
+router.post("/", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(post_vallidation_1.createPostSchema), post_service_1.default.createPost);
 // react to post
 router.patch("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.reactPost);
 // get specific post

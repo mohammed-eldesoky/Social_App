@@ -34,13 +34,13 @@ export class UnAuthorizedException extends AppError {
 
 export class BadRequestException extends AppError {
   constructor(message: string, errorDettails?: Record<string, any>[]) {
-    super(message, 400),errorDettails;
+    super(message, 400,errorDettails)
   }
 }
 
 //___________________invalid credentials________________
 export class ForbiddentException extends AppError {
   constructor(message: string, errorDettails?: Record<string, any>[]) {
-    super(message, 403),errorDettails;
+    super(message, 403,errorDettails)
   }
 }

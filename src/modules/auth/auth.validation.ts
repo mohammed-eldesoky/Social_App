@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { GENDER_TYPES, USER_AGENT } from "../../utils";
-import { RegistterDTO } from "./auth.dto";
+import { LoginDTO, RegistterDTO, VerifyAccountDTO } from "./auth.dto";
 
 // register validaton  schema
 // all fields by default are required
@@ -16,3 +16,22 @@ export const registerSchema = z.object<RegistterDTO>({
   path:["email"]
 
  });
+
+ // login validation schema
+
+ export const loginSchema = z.object<LoginDTO>({
+  
+  email: z.email() as unknown as string,
+  password:z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) as unknown as string,
+
+})
+
+// verify account validation schema
+
+
+ export const verifyAccountSchema = z.object<VerifyAccountDTO>({
+  otp: z.string().min(6).max(6) as unknown as string,
+  email: z.email() as unknown as string
+
+
+})

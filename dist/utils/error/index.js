@@ -36,14 +36,14 @@ class UnAuthorizedException extends AppError {
 exports.UnAuthorizedException = UnAuthorizedException;
 class BadRequestException extends AppError {
     constructor(message, errorDettails) {
-        super(message, 400), errorDettails;
+        super(message, 400, errorDettails);
     }
 }
 exports.BadRequestException = BadRequestException;
 //___________________invalid credentials________________
 class ForbiddentException extends AppError {
     constructor(message, errorDettails) {
-        super(message, 403), errorDettails;
+        super(message, 403, errorDettails);
     }
 }
 exports.ForbiddentException = ForbiddentException;

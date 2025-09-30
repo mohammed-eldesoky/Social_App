@@ -5,8 +5,8 @@ import * as authvalidation from "./auth.validation"
 const router = Router();
 
 router.post("/register",isValid(authvalidation.registerSchema), authService.register);
-router.post("/login", authService.login);
-router.post("/verify-account", authService.verifyAccount);
+router.post("/login",isValid(authvalidation.loginSchema) ,authService.login);
+router.post("/verify-account",isValid(authvalidation.verifyAccountSchema) ,authService.verifyAccount);
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 
