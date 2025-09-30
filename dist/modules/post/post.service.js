@@ -73,7 +73,7 @@ class PostService {
             populate: [
                 { path: "userId", select: "fullName firstName lastName " },
                 { path: "reactions.userId", select: "fullName firstName lastName " },
-                // don't forget to populate comments userId
+                { path: "comments", match: { parentId: [] } }, //only first layer comments
             ],
         });
         //fail case

@@ -9,7 +9,7 @@ class CommentFactory {
         newComment.content = createCommentDTO.content;
         newComment.userId = user._id;
         newComment.postId = post._id;
-        newComment.parentsIds = [...comment.parentsIds, comment._id];
+        newComment.parentsIds = comment ? [...comment.parentsIds, comment._id] : [];
         newComment.reactions = [];
         return newComment;
     }
