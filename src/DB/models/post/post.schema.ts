@@ -41,5 +41,11 @@ export const postSchema = new Schema<Ipost>(
 
     reactions: [reactionSchema],
   },
-  { timestamps: true }
+  { timestamps: true ,toJSON: { virtuals: true }, toObject: { virtuals: true }}
 );
+
+postSchema.virtual("comments",{
+  localField:"_id", //post id
+  foreignField:"postId", //comment postId
+  ref:"Comment" // model name
+})
