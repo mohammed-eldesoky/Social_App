@@ -27,13 +27,10 @@ exports.commentSchema = new mongoose_1.Schema({
         ref: "Post",
         required: true,
     },
-    parentsIds: [
-        {
-            type: mongoose_1.Schema.Types.ObjectId,
-            ref: "Comment",
-            required: true,
-        },
-    ],
+    parentsId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Comment",
+    },
     reactions: [post_schema_1.reactionSchema],
     mentions: {
         type: [mongoose_1.Schema.Types.ObjectId],

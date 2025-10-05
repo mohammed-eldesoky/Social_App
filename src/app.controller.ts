@@ -1,5 +1,5 @@
 import type { Express, NextFunction , Response,Request, ErrorRequestHandler} from "express";
-import { authRouter, postRouter, userRouter } from "./modules";
+import { authRouter, commentRouter, postRouter, userRouter } from "./modules";
 import { connectDB } from "./DB";
 import { AppError } from "./utils";
 
@@ -14,6 +14,7 @@ app.use("/user",userRouter)
 //posts
 app.use("/post",postRouter)
 //comments  
+app.use("/comment",commentRouter)
 //messages
 
 app.use("/{*dummy}",(req,res,next)=>{

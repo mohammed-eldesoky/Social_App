@@ -13,6 +13,7 @@ function bootstrap(app, express) {
     //posts
     app.use("/post", modules_1.postRouter);
     //comments  
+    app.use("/comment", modules_1.commentRouter);
     //messages
     app.use("/{*dummy}", (req, res, next) => {
         return res.status(404).json({ message: "invalid roueter", success: false });
