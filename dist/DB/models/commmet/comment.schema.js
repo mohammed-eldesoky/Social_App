@@ -27,7 +27,7 @@ exports.commentSchema = new mongoose_1.Schema({
         ref: "Post",
         required: true,
     },
-    parentsId: {
+    parentId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Comment",
     },
@@ -35,4 +35,9 @@ exports.commentSchema = new mongoose_1.Schema({
     mentions: {
         type: [mongoose_1.Schema.Types.ObjectId],
     },
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+exports.commentSchema.virtual("replies", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "parentId"
+});

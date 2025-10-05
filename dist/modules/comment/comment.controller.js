@@ -10,4 +10,6 @@ const comment_validation_1 = require("./comment.validation");
 const router = (0, express_1.Router)({ mergeParams: true });
 // add comment  : /post/postId/comment
 router.post("{/:id}", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(comment_validation_1.createPostSchema), comment_service_1.default.createComment);
+// get specific comment  : /post/postId/comment/id
+router.get("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.getSpecificComment);
 exports.default = router;

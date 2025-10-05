@@ -34,12 +34,31 @@ class CommentService {
         // repository
         const createdComment = await this.commentRepository.create(comment);
         //send res
-        return res
-            .status(201)
-            .json({
+        return res.status(201).json({
             message: "comment created successfully",
             success: true,
             data: { createdComment },
+        });
+    };
+    // _________________________ get specific comment_________________________//
+    getSpecificComment = async (req, res, next) => {
+        //get data from req
+        const { id } = req.params;
+        // check if comment exists
+        const commentExist = await this.commentRepository.exist({ _id: id }, {}, {
+            populate: [{ path: "replies" }]
+        });
+        // fail case
+        if (!commentExist) {
+            throw new utils_1.NotFoundException("comment not found");
+        }
+        //send res
+        return res
+            .status(200)
+            .json({
+            message: "comment found successfully",
+            success: true,
+            data: { commentExist },
         });
     };
 }

@@ -27,7 +27,7 @@ export  const commentSchema = new Schema<Icomment>(
       ref: "Post",
       required: true,
     },
-    parentsId: 
+    parentId: 
       {
         type: Schema.Types.ObjectId,
         ref: "Comment",
@@ -40,5 +40,11 @@ export  const commentSchema = new Schema<Icomment>(
     },
     
   },
-  { timestamps: true }
+  { timestamps: true ,toJSON:{virtuals:true},toObject:{virtuals:true}}
 );
+
+commentSchema.virtual("replies",{
+ref:"Comment",
+localField:"_id",
+foreignField:"parentId"
+} )

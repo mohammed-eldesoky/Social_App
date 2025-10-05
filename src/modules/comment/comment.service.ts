@@ -4,7 +4,8 @@ import { NotFoundException } from "../../utils";
 import { PostRepository } from "./../../DB/models/post/post.repository";
 import { CommentFactory } from "./factory/index";
 import { CreateCommentDTO } from "./comment.dto";
-
+import th from "zod/v4/locales/th.js";
+import path from "path";
 
 class CommentService {
   private readonly postRepository = new PostRepository();
@@ -46,12 +47,39 @@ class CommentService {
 
     //send res
 
+    return res.status(201).json({
+      message: "comment created successfully",
+      success: true,
+      data: { createdComment },
+    });
+  };
+
+  // _________________________ get specific comment_________________________//
+
+  getSpecificComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //get data from req
+    const { id } = req.params;
+    // check if comment exists
+    const commentExist = await this.commentRepository.exist({ _id: id },{},{
+      populate:[{path:"replies"}]
+    });
+
+    // fail case
+    if (!commentExist) {
+      throw new NotFoundException("comment not found");
+    }
+
+    //send res
     return res
-      .status(201)
+      .status(200)
       .json({
-        message: "comment created successfully",
+        message: "comment found successfully",
         success: true,
-        data: { createdComment },
+        data: { commentExist },
       });
   };
 }

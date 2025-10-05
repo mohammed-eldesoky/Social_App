@@ -11,4 +11,8 @@ router.post(
   isValid(createPostSchema),
   commentService.createComment
 );
+
+// get specific comment  : /post/postId/comment/id
+
+router.get("/:id", isAuthenticated(), commentService.getSpecificComment);
 export default router;
