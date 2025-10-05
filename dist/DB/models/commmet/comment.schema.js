@@ -39,5 +39,5 @@ exports.commentSchema = new mongoose_1.Schema({
 exports.commentSchema.virtual("replies", {
     ref: "Comment",
     localField: "_id",
-    foreignField: "parentId"
+    foreignField: "parentId",
 });

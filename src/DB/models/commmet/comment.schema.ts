@@ -3,16 +3,16 @@ import { Icomment } from "../../../utils";
 import { reactionSchema } from "../post/post.schema";
 
 // ___________comments__________
-export  const commentSchema = new Schema<Icomment>(
+export const commentSchema = new Schema<Icomment>(
   {
     content: {
       type: String,
-    //   required: function () {
-    //     if (this.attachments.length) {
-    //       return false;
-    //     }
-    //     return true;
-    //   },
+      //   required: function () {
+      //     if (this.attachments.length) {
+      //       return false;
+      //     }
+      //     return true;
+      //   },
     },
     // attachments: {
     //   type: [],
@@ -27,24 +27,21 @@ export  const commentSchema = new Schema<Icomment>(
       ref: "Post",
       required: true,
     },
-    parentId: 
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Comment",
- 
-      },
-   
+    parentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+
     reactions: [reactionSchema],
     mentions: {
       type: [Schema.Types.ObjectId],
     },
-    
   },
-  { timestamps: true ,toJSON:{virtuals:true},toObject:{virtuals:true}}
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-commentSchema.virtual("replies",{
-ref:"Comment",
-localField:"_id",
-foreignField:"parentId"
-} )
+commentSchema.virtual("replies", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "parentId",
+});

@@ -46,19 +46,36 @@ class CommentService {
         const { id } = req.params;
         // check if comment exists
         const commentExist = await this.commentRepository.exist({ _id: id }, {}, {
-            populate: [{ path: "replies" }]
+            populate: [{ path: "replies" }],
         });
         // fail case
         if (!commentExist) {
             throw new utils_1.NotFoundException("comment not found");
         }
         //send res
-        return res
-            .status(200)
-            .json({
+        return res.status(200).json({
             message: "comment found successfully",
             success: true,
             data: { commentExist },
+        });
+    };
+    // _________________________ delete  comments_________________________//
+    deleteComment = async (req, res, next) => {
+        //get data from req
+        const { id } = req.params;
+        // check if comment exists
+        const commentExist = await this.commentRepository.exist({ _id: id });
+        // fail case
+        if (!commentExist) {
+            throw new utils_1.NotFoundException("comment not found to be deleted");
+        }
+        // delete comment from db
+        const deletedComment = await this.commentRepository.delete({ _id: id });
+        //send res
+        return res.status(200).json({
+            message: "comment deleted successfully",
+            success: true,
+            data: { deletedComment },
         });
     };
 }

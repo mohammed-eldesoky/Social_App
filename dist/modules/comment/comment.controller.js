@@ -12,4 +12,6 @@ const router = (0, express_1.Router)({ mergeParams: true });
 router.post("{/:id}", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(comment_validation_1.createPostSchema), comment_service_1.default.createComment);
 // get specific comment  : /post/postId/comment/id
 router.get("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.getSpecificComment);
+// delete comment  : /post/postId/comment/id
+router.delete("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.deleteComment);
 exports.default = router;

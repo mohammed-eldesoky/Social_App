@@ -15,4 +15,6 @@ router.post(
 // get specific comment  : /post/postId/comment/id
 
 router.get("/:id", isAuthenticated(), commentService.getSpecificComment);
+// delete comment  : /post/postId/comment/id
+router.delete("/:id", isAuthenticated(), commentService.deleteComment);
 export default router;

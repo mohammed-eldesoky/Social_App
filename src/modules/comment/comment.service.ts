@@ -15,7 +15,11 @@ class CommentService {
 
   //_________________________create comment_________________________//
 
-  createComment = async (req: Request, res: Response, next: NextFunction) => {
+  public createComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //get data from req
     const { postId, id } = req.params;
     const createCommentDTO: CreateCommentDTO = req.body;
@@ -56,7 +60,7 @@ class CommentService {
 
   // _________________________ get specific comment_________________________//
 
-  getSpecificComment = async (
+  public getSpecificComment = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -64,9 +68,13 @@ class CommentService {
     //get data from req
     const { id } = req.params;
     // check if comment exists
-    const commentExist = await this.commentRepository.exist({ _id: id },{},{
-      populate:[{path:"replies"}]
-    });
+    const commentExist = await this.commentRepository.exist(
+      { _id: id },
+      {},
+      {
+        populate: [{ path: "replies" }],
+      }
+    );
 
     // fail case
     if (!commentExist) {
@@ -74,13 +82,36 @@ class CommentService {
     }
 
     //send res
-    return res
-      .status(200)
-      .json({
-        message: "comment found successfully",
-        success: true,
-        data: { commentExist },
-      });
+    return res.status(200).json({
+      message: "comment found successfully",
+      success: true,
+      data: { commentExist },
+    });
+  };
+
+  // _________________________ delete  comments_________________________//
+
+  public deleteComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //get data from req
+    const { id } = req.params;
+    // check if comment exists
+    const commentExist = await this.commentRepository.exist({ _id: id });
+    // fail case
+    if (!commentExist) {
+      throw new NotFoundException("comment not found to be deleted");
+    }
+    // delete comment from db
+    const deletedComment = await this.commentRepository.delete({_id:id});
+    //send res
+    return res.status(200).json({
+      message: "comment deleted successfully",
+      success: true,
+      data: { deletedComment },
+    });
   };
 }
 
