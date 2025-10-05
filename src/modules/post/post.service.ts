@@ -9,7 +9,11 @@ class PostService {
   private readonly postFactory = new postFactory();
   //* create post service
 
-  createPost = async (req: Request, res: Response, next: NextFunction) => {
+  public createPost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     // 1-get data from req
     const postDTO: PostDTO = req.body;
     //2- factory>> prepare data>> post entity>> repository
@@ -26,7 +30,11 @@ class PostService {
 
   //____________________________ reaction___________________________________//
 
-  reactPost = async (req: Request, res: Response, next: NextFunction) => {
+  public reactPost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //1-get data from req
     const { id } = req.params;
     const userId = req.user._id;
@@ -84,7 +92,11 @@ class PostService {
 
   // ___________________________ get specific post ___________________________________//
 
-  getSpecificPost = async (req: Request, res: Response, next: NextFunction) => {
+  public getSpecificPost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     //Get data from req
     const { id } = req.params; //post id
     //check if post exists
@@ -95,7 +107,7 @@ class PostService {
         populate: [
           { path: "userId", select: "fullName firstName lastName " },
           { path: "reactions.userId", select: "fullName firstName lastName " },
-          { path: "comments",match:{parentId:null} }, //only first layer comments
+          { path: "comments", match: { parentId: null } }, //only first layer comments
         ],
       }
     );
@@ -110,6 +122,32 @@ class PostService {
       data: { post: postExist },
     });
   };
-}
 
+  // ___________________________ delete post ___________________________________//
+
+  public deletePost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+//1-get data from req
+    const { id } = req.params; //post id
+    //2-check if post exists
+    const postExist = await this.postRepository.exist({ _id: id });
+    //fail case
+    if (!postExist) {
+      throw new NotFoundException("post not found");
+    }
+    //3-delete post
+    await this.postRepository.delete({ _id: id });
+    //4- send response
+    res.status(204).json({
+      message: "post deleted successfully",
+      success: true,
+  
+    });
+
+
+  };
+}
 export default new PostService();

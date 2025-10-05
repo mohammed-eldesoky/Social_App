@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import { Ipost, Ireaction, USER_REACTIONS } from "../../../utils";
+import { Comment } from "../commmet/comment.model";
 
 //reaction schema
 export const reactionSchema = new Schema<Ireaction>(
@@ -41,11 +42,20 @@ export const postSchema = new Schema<Ipost>(
 
     reactions: [reactionSchema],
   },
-  { timestamps: true ,toJSON: { virtuals: true }, toObject: { virtuals: true }}
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-postSchema.virtual("comments",{
-  localField:"_id", //post id
-  foreignField:"postId", //comment postId
-  ref:"Comment" // model name
-})
+postSchema.virtual("comments", {
+  localField: "_id", //post id
+  foreignField: "postId", //comment postId
+  ref: "Comment", // model name
+});
+
+// use hooks to delete comments and replies when delete main post
+postSchema.pre("deleteOne", async function (next) {
+  //filter
+  const filter = typeof this.getFilter() == "function" ? this.getFilter() : {};
+  await Comment.deleteMany({ postId: filter._id }); //any coment and reply have this postId will be deleted
+
+  next();
+});

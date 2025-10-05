@@ -87,5 +87,23 @@ class PostService {
             data: { post: postExist },
         });
     };
+    // ___________________________ delete post ___________________________________//
+    deletePost = async (req, res, next) => {
+        //1-get data from req
+        const { id } = req.params; //post id
+        //2-check if post exists
+        const postExist = await this.postRepository.exist({ _id: id });
+        //fail case
+        if (!postExist) {
+            throw new utils_1.NotFoundException("post not found");
+        }
+        //3-delete post
+        await this.postRepository.delete({ _id: id });
+        //4- send response
+        res.status(204).json({
+            message: "post deleted successfully",
+            success: true,
+        });
+    };
 }
 exports.default = new PostService();

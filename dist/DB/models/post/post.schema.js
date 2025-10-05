@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postSchema = exports.reactionSchema = void 0;
 const mongoose_1 = require("mongoose");
 const utils_1 = require("../../../utils");
+const comment_model_1 = require("../commmet/comment.model");
 //reaction schema
 exports.reactionSchema = new mongoose_1.Schema({
     reaction: {
@@ -38,5 +39,12 @@ exports.postSchema = new mongoose_1.Schema({
 exports.postSchema.virtual("comments", {
     localField: "_id", //post id
     foreignField: "postId", //comment postId
-    ref: "Comment" // model name
+    ref: "Comment", // model name
+});
+// use hooks to delete comments and replies when delete main post
+exports.postSchema.pre("deleteOne", async function (next) {
+    //filter
+    const filter = typeof this.getFilter() == "function" ? this.getFilter() : {};
+    await comment_model_1.Comment.deleteMany({ postId: filter._id }); //any coment and reply have this postId will be deleted
+    next();
 });
