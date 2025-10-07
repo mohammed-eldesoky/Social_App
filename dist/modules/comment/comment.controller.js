@@ -14,4 +14,6 @@ router.post("{/:id}", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isVa
 router.get("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.getSpecificComment);
 // delete comment  : /post/postId/comment/id
 router.delete("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.deleteComment);
+// react to comment  : /post/postId/comment/id
+router.patch("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.reactComment);
 exports.default = router;

@@ -4,6 +4,7 @@ const comments_repository_1 = require("./../../DB/models/commmet/comments.reposi
 const utils_1 = require("../../utils");
 const post_repository_1 = require("./../../DB/models/post/post.repository");
 const index_1 = require("./factory/index");
+const react_provider_1 = require("../../utils/common/providers/react.provider");
 class CommentService {
     postRepository = new post_repository_1.PostRepository();
     commentRepository = new comments_repository_1.CommentRepository();
@@ -84,6 +85,17 @@ class CommentService {
             success: true,
             data: { deletedComment },
         });
+    };
+    // _________________________ react to comment_________________________//
+    reactComment = async (req, res, next) => {
+        //get data from req
+        const { id } = req.params;
+        const userId = req.user._id;
+        const { reaction } = req.body;
+        //add or remove reaction
+        await (0, react_provider_1.addReactProvider)(this.commentRepository, id, userId, reaction);
+        //send res
+        return res.sendStatus(204);
     };
 }
 exports.default = new CommentService();

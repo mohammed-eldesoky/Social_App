@@ -6,6 +6,7 @@ import { CommentFactory } from "./factory/index";
 import { CreateCommentDTO } from "./comment.dto";
 import th from "zod/v4/locales/th.js";
 import path from "path";
+import { addReactProvider } from "../../utils/common/providers/react.provider";
 
 class CommentService {
   private readonly postRepository = new PostRepository();
@@ -126,6 +127,21 @@ class CommentService {
       data: { deletedComment },
     });
   };
+
+// _________________________ react to comment_________________________//
+
+public reactComment = async (req: Request, res: Response, next: NextFunction) => {
+//get data from req
+const { id } = req.params;
+const userId = req.user._id;
+const { reaction } = req.body;
+//add or remove reaction
+ await  addReactProvider(this.commentRepository,id,userId,reaction);
+ //send res
+ return res.sendStatus(204)
+
+}
+
 }
 
 export default new CommentService();
