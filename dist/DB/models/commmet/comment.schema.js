@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentSchema = void 0;
 const mongoose_1 = require("mongoose");
-const post_schema_1 = require("../post/post.schema");
+const reaction_schema_1 = require("../common/reaction.schema");
 // ___________comments__________
 exports.commentSchema = new mongoose_1.Schema({
     content: {
@@ -31,7 +31,7 @@ exports.commentSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Comment",
     },
-    reactions: [post_schema_1.reactionSchema],
+    reactions: [reaction_schema_1.reactionSchema],
     mentions: {
         type: [mongoose_1.Schema.Types.ObjectId],
     },

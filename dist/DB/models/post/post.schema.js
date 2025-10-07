@@ -1,22 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postSchema = exports.reactionSchema = void 0;
+exports.postSchema = void 0;
 const mongoose_1 = require("mongoose");
-const utils_1 = require("../../../utils");
 const comment_model_1 = require("../commmet/comment.model");
-//reaction schema
-exports.reactionSchema = new mongoose_1.Schema({
-    reaction: {
-        type: String,
-        enum: utils_1.USER_REACTIONS,
-        default: utils_1.USER_REACTIONS.like,
-    },
-    userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-}, { timestamps: true });
+const reaction_schema_1 = require("../common/reaction.schema");
 // post schema
 exports.postSchema = new mongoose_1.Schema({
     userId: {
@@ -34,7 +21,7 @@ exports.postSchema = new mongoose_1.Schema({
         },
         trim: true,
     },
-    reactions: [exports.reactionSchema],
+    reactions: [reaction_schema_1.reactionSchema],
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 exports.postSchema.virtual("comments", {
     localField: "_id", //post id

@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 import { Icomment } from "../../../utils";
-import { reactionSchema } from "../post/post.schema";
+import { reactionSchema } from "../common/reaction.schema";
+
 
 // ___________comments__________
 export const commentSchema = new Schema<Icomment>(
