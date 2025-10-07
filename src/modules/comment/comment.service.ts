@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CommentRepository } from "./../../DB/models/commmet/comments.repository";
-import { NotFoundException } from "../../utils";
+import { NotFoundException, UnAuthorizedException } from "../../utils";
 import { PostRepository } from "./../../DB/models/post/post.repository";
 import { CommentFactory } from "./factory/index";
 import { CreateCommentDTO } from "./comment.dto";
@@ -99,13 +99,26 @@ class CommentService {
     //get data from req
     const { id } = req.params;
     // check if comment exists
-    const commentExist = await this.commentRepository.exist({ _id: id });
+    const commentExist = await this.commentRepository.exist(
+      { _id: id },
+      {},
+      {
+        populate: [{ path: "postId", select: "userId" }], // to check if user is owner of post,
+      }
+    );
     // fail case
     if (!commentExist) {
       throw new NotFoundException("comment not found to be deleted");
     }
+    //check if user is the owner of the comment
+    if (commentExist.userId.toString() != req.user._id.toString()&&
+    (commentExist.postId as unknown as any).userId.toString() != req.user._id.toString()) {
+      throw new UnAuthorizedException(
+        "you are not allowed to delete this comment"
+      );
+    }
     // delete comment from db
-    const deletedComment = await this.commentRepository.delete({_id:id});
+    const deletedComment = await this.commentRepository.delete({ _id: id });
     //send res
     return res.status(200).json({
       message: "comment deleted successfully",

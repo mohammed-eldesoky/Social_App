@@ -97,6 +97,10 @@ class PostService {
         if (!postExist) {
             throw new utils_1.NotFoundException("post not found");
         }
+        //check if user is the owner of the post
+        if (postExist.userId.toString() != req.user._id.toString()) {
+            throw new utils_1.UnAuthorizedException("you are not allowed to delete this post");
+        }
         //3-delete post
         await this.postRepository.delete({ _id: id });
         //4- send response

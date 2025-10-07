@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { PostDTO } from "./post.dto";
 import { postFactory } from "./factory/index";
 import { PostRepository } from "../../DB/models/post/post.repository";
-import { NotFoundException, USER_REACTIONS } from "../../utils";
+import {
+  NotFoundException,
+  UnAuthorizedException,
+  USER_REACTIONS,
+} from "../../utils";
 
 class PostService {
   private readonly postRepository = new PostRepository();
@@ -130,7 +134,7 @@ class PostService {
     res: Response,
     next: NextFunction
   ) => {
-//1-get data from req
+    //1-get data from req
     const { id } = req.params; //post id
     //2-check if post exists
     const postExist = await this.postRepository.exist({ _id: id });
@@ -138,16 +142,19 @@ class PostService {
     if (!postExist) {
       throw new NotFoundException("post not found");
     }
+    //check if user is the owner of the post
+    if (postExist.userId.toString() != req.user._id.toString()) {
+      throw new UnAuthorizedException(
+        "you are not allowed to delete this post"
+      );
+    }
     //3-delete post
     await this.postRepository.delete({ _id: id });
     //4- send response
     res.status(204).json({
       message: "post deleted successfully",
       success: true,
-  
     });
-
-
   };
 }
 export default new PostService();

@@ -15,6 +15,10 @@ router.patch("/:id", isAuthenticated(), postService.reactPost);
 // get specific post
 router.get("/:id", isAuthenticated(), postService.getSpecificPost);
 
+// delete post
+router.delete("/:id", isAuthenticated(), postService.deletePost);
+
+
 /**
  * @route_Comment
  */
