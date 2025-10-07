@@ -3,6 +3,7 @@ import { GENDER_TYPES, USER_AGENT } from "../../utils";
 import {
   LoginDTO,
   RegistterDTO,
+  UpdateBasicInfoDTO,
   UpdatePasswordDTO,
   VerifyAccountDTO,
 } from "./auth.dto";
@@ -48,4 +49,13 @@ export const updatePasswordSchema = z.object<UpdatePasswordDTO>({
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
       "Password must be at least 6 characters long and contain both letters and numbers"
     ) as unknown as string,
+});
+
+
+// update basic info and email validation schema
+export const updateBasicInfoSchema = z.object<UpdateBasicInfoDTO>({
+  fullName: z.string().min(3).max(20).optional() as unknown as string,
+  gender: z.enum(GENDER_TYPES).optional() as unknown as string,
+  email: z.string().email().optional() as unknown as string,
+  phoneNumber: z.string().min(11).max(11).optional() as unknown as string,
 });

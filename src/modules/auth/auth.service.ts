@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { LoginDTO, RegistterDTO, UpdatePasswordDTO, VerifyAccountDTO } from "./auth.dto";
+import {
+  LoginDTO,
+  RegistterDTO,
+  UpdateBasicInfoDTO,
+  UpdatePasswordDTO,
+  VerifyAccountDTO,
+} from "./auth.dto";
 import {
   BadRequestException,
   ConflictException,
@@ -15,8 +21,7 @@ import { sendEmail } from "../../utils";
 import { compareHash } from "../../utils";
 import { USER_AGENT } from "../../utils";
 import { authProvider } from "./auth.provider";
-import Token from './../../DB/models/token/token.model';
-
+import Token from "./../../DB/models/token/token.model";
 
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
@@ -55,7 +60,6 @@ class AuthService {
 
   //_______________________________________________________________________________________________
   login = async (req: Request, res: Response, next: NextFunction) => {
-    
     // 1- get data from body
     const loginDTO: LoginDTO = req.body;
 
@@ -67,36 +71,40 @@ class AuthService {
 
     // 3- check password (local accounts only)
     if (user.userAgent === USER_AGENT.local) {
-      const isPasswordValid = await compareHash(loginDTO.password, user.password);
+      const isPasswordValid = await compareHash(
+        loginDTO.password,
+        user.password
+      );
       if (!isPasswordValid) {
         throw new ForbiddentException("Invalid credentials");
       }
     }
-    
+
     //4-generate access token
-     const accessToken = generateToken({payload:{_id:user._id ,role:user.role},
-      options:{expiresIn:"1d"}
-      })
+    const accessToken = generateToken({
+      payload: { _id: user._id, role: user.role },
+      options: { expiresIn: "1d" },
+    });
 
     //generate refresh token
-     const refreshToken = generateToken({payload:{_id:user._id ,role:user.role},
-      options:{expiresIn:"7d"}
-      })
+    const refreshToken = generateToken({
+      payload: { _id: user._id, role: user.role },
+      options: { expiresIn: "7d" },
+    });
 
     //token in db
 
-     Token.create({
-      token:refreshToken,
-      user:user._id,
-      type:TOKEN_TYPES.refresh,
+    Token.create({
+      token: refreshToken,
+      user: user._id,
+      type: TOKEN_TYPES.refresh,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-
-     })
+    });
     // 5- send response
     return res.status(200).json({
       message: "Login successfully",
       success: true,
-      data:{accessToken,refreshToken}
+      data: { accessToken, refreshToken },
     });
   };
 
@@ -114,22 +122,18 @@ class AuthService {
       { isVerified: true, $unset: { otp: "", otpExpiryAt: "" } }
     );
 
-// send response
+    // send response
     return res.status(200).json({
       message: "Account verified successfully",
       success: true,
     });
-
-
-
-
   };
 
   //__________________________________________________________________________________________________
 
   updatePassword = async (req: Request, res: Response, next: NextFunction) => {
     //get data from req
-    const updatePasswordDTO: UpdatePasswordDTO= req.body;
+    const updatePasswordDTO: UpdatePasswordDTO = req.body;
     const userId = req.user._id;
 
     // Check if user exists
@@ -138,13 +142,18 @@ class AuthService {
       throw new NotFoundException("User not found");
     }
 
-  // compare old password
-    const isPasswordValid = await compareHash(updatePasswordDTO.oldPassword, user.password);
+    // compare old password
+    const isPasswordValid = await compareHash(
+      updatePasswordDTO.oldPassword,
+      user.password
+    );
     if (!isPasswordValid) {
       throw new ForbiddentException("Invalid credentials");
     }
     //prepare data
-    const updatedUser = await this.authFactory.updatePassword(updatePasswordDTO);
+    const updatedUser = await this.authFactory.updatePassword(
+      updatePasswordDTO
+    );
     //update user
     await this.userRepository.update({ _id: userId }, updatedUser);
     //send response
@@ -152,10 +161,47 @@ class AuthService {
       message: "Password updated successfully",
       success: true,
     });
+  };
+  //__________________________________________________________________________________________________
+  updateBasicInfoAndEmail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    // get data from req
+    const updateBasicInfoDTO: UpdateBasicInfoDTO = req.body;
+    const userId = req.user._id;
 
-  }
+    // Check if user exists
+    const userExist = await this.userRepository.exist({ _id: userId });
+    if (!userExist) {
+      throw new NotFoundException("User not found");
+    }
 
-
+    // check if email already exists
+    if (
+      updateBasicInfoDTO.email &&
+      updateBasicInfoDTO.email !== userExist.email
+    ) {
+      const emailExist = await this.userRepository.exist({
+        email: updateBasicInfoDTO.email,
+      });
+      if (emailExist) {
+        throw new ConflictException("Email already exists");
+      }
+    }
+    //prepare data
+    const updatedUser = await this.authFactory.updateBasicInfoAndEmail(
+      updateBasicInfoDTO
+    );
+    //update user
+    await this.userRepository.update({ _id: userId }, updatedUser);
+    //send response
+    return res.status(200).json({
+      message: "Basic info updated successfully",
+      success: true,
+    });
+  };
 }
 
 export default new AuthService(); //single ton

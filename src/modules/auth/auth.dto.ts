@@ -29,3 +29,11 @@ export interface UpdatePasswordDTO {
   oldPassword: string;
   newPassword: string;
 }
+
+//_____________________update basic info and email ______________________//
+export interface UpdateBasicInfoDTO {
+  fullName?: string;
+  gender?: string;
+  email?: string;
+  phoneNumber?: string;
+}

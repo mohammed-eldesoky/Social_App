@@ -56,12 +56,14 @@ class AuthService {
             }
         }
         //4-generate access token
-        const accessToken = (0, utils_1.generateToken)({ payload: { _id: user._id, role: user.role },
-            options: { expiresIn: "1d" }
+        const accessToken = (0, utils_1.generateToken)({
+            payload: { _id: user._id, role: user.role },
+            options: { expiresIn: "1d" },
         });
         //generate refresh token
-        const refreshToken = (0, utils_1.generateToken)({ payload: { _id: user._id, role: user.role },
-            options: { expiresIn: "7d" }
+        const refreshToken = (0, utils_1.generateToken)({
+            payload: { _id: user._id, role: user.role },
+            options: { expiresIn: "7d" },
         });
         //token in db
         token_model_1.default.create({
@@ -74,7 +76,7 @@ class AuthService {
         return res.status(200).json({
             message: "Login successfully",
             success: true,
-            data: { accessToken, refreshToken }
+            data: { accessToken, refreshToken },
         });
     };
     //__________________________________________________________________________________________________
@@ -113,6 +115,36 @@ class AuthService {
         //send response
         return res.status(200).json({
             message: "Password updated successfully",
+            success: true,
+        });
+    };
+    //__________________________________________________________________________________________________
+    updateBasicInfoAndEmail = async (req, res, next) => {
+        // get data from req
+        const updateBasicInfoDTO = req.body;
+        const userId = req.user._id;
+        // Check if user exists
+        const userExist = await this.userRepository.exist({ _id: userId });
+        if (!userExist) {
+            throw new utils_1.NotFoundException("User not found");
+        }
+        // check if email already exists
+        if (updateBasicInfoDTO.email &&
+            updateBasicInfoDTO.email !== userExist.email) {
+            const emailExist = await this.userRepository.exist({
+                email: updateBasicInfoDTO.email,
+            });
+            if (emailExist) {
+                throw new utils_1.ConflictException("Email already exists");
+            }
+        }
+        //prepare data
+        const updatedUser = await this.authFactory.updateBasicInfoAndEmail(updateBasicInfoDTO);
+        //update user
+        await this.userRepository.update({ _id: userId }, updatedUser);
+        //send response
+        return res.status(200).json({
+            message: "Basic info updated successfully",
             success: true,
         });
     };

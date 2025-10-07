@@ -8,7 +8,7 @@ const entity_1 = require("../entity");
 //factory pattern
 class AuthFactory {
     async register(registterDTO) {
-        const user = new entity_1.User;
+        const user = new entity_1.User();
         user.fullName = registterDTO.fullName;
         user.email = registterDTO.email;
         user.password = await (0, hash_1.generateHash)(registterDTO.password);
@@ -26,6 +26,19 @@ class AuthFactory {
         const user = new entity_1.User();
         user.password = await (0, hash_1.generateHash)(updatePasswordDTO.newPassword);
         user.credenialUpdatedAt = new Date();
+        return user;
+    }
+    async updateBasicInfoAndEmail(updateBasicInfoDTO) {
+        const user = {};
+        if (updateBasicInfoDTO.fullName)
+            user.fullName = updateBasicInfoDTO.fullName;
+        if (updateBasicInfoDTO.gender)
+            user.gender = updateBasicInfoDTO.gender;
+        if (updateBasicInfoDTO.email)
+            user.email = updateBasicInfoDTO.email;
+        if (updateBasicInfoDTO.phoneNumber)
+            user.phoneNumber = updateBasicInfoDTO.phoneNumber;
+        user.updatedAt = new Date();
         return user;
     }
 }
