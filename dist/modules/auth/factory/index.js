@@ -22,5 +22,11 @@ class AuthFactory {
         user.isVerified = false;
         return user;
     }
+    async updatePassword(updatePasswordDTO) {
+        const user = new entity_1.User();
+        user.password = await (0, hash_1.generateHash)(updatePasswordDTO.newPassword);
+        user.credenialUpdatedAt = new Date();
+        return user;
+    }
 }
 exports.AuthFactory = AuthFactory;

@@ -24,3 +24,8 @@ export interface VerifyAccountDTO {
   email: string;
   otp: string;
 }
+//_____________________update password ______________________//
+export interface UpdatePasswordDTO {
+  oldPassword: string;
+  newPassword: string;
+}

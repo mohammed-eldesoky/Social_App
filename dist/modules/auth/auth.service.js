@@ -91,5 +91,30 @@ class AuthService {
             success: true,
         });
     };
+    //__________________________________________________________________________________________________
+    updatePassword = async (req, res, next) => {
+        //get data from req
+        const updatePasswordDTO = req.body;
+        const userId = req.user._id;
+        // Check if user exists
+        const user = await this.userRepository.exist({ _id: userId });
+        if (!user) {
+            throw new utils_1.NotFoundException("User not found");
+        }
+        // compare old password
+        const isPasswordValid = await (0, utils_2.compareHash)(updatePasswordDTO.oldPassword, user.password);
+        if (!isPasswordValid) {
+            throw new utils_1.ForbiddentException("Invalid credentials");
+        }
+        //prepare data
+        const updatedUser = await this.authFactory.updatePassword(updatePasswordDTO);
+        //update user
+        await this.userRepository.update({ _id: userId }, updatedUser);
+        //send response
+        return res.status(200).json({
+            message: "Password updated successfully",
+            success: true,
+        });
+    };
 }
 exports.default = new AuthService(); //single ton

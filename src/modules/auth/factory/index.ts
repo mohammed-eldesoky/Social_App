@@ -1,7 +1,7 @@
 import { GENDER_TYPES, SYS_ROLES, USER_AGENT } from "../../../utils/common/enum";
 import { generateHash } from "../../../utils/hash";
 import { generateOtp, generateOtpExpiryTime } from "../../../utils/otp";
-import { RegistterDTO } from "../auth.dto";
+import { RegistterDTO, UpdatePasswordDTO } from "../auth.dto";
 import { User } from "../entity";
 
 //factory pattern
@@ -23,6 +23,15 @@ user.isVerified = false;
 return user;
 
 }
+
+  async updatePassword(updatePasswordDTO: UpdatePasswordDTO) {
+    const user = new User();
+
+    user.password = await generateHash(updatePasswordDTO.newPassword);
+    user.credenialUpdatedAt = new Date();
+
+    return user;
+  }
 
 
 }

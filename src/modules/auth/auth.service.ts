@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { LoginDTO, RegistterDTO, VerifyAccountDTO } from "./auth.dto";
+import { LoginDTO, RegistterDTO, UpdatePasswordDTO, VerifyAccountDTO } from "./auth.dto";
 import {
   BadRequestException,
   ConflictException,
@@ -124,6 +124,38 @@ class AuthService {
 
 
   };
+
+  //__________________________________________________________________________________________________
+
+  updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+    //get data from req
+    const updatePasswordDTO: UpdatePasswordDTO= req.body;
+    const userId = req.user._id;
+
+    // Check if user exists
+    const user = await this.userRepository.exist({ _id: userId });
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+  // compare old password
+    const isPasswordValid = await compareHash(updatePasswordDTO.oldPassword, user.password);
+    if (!isPasswordValid) {
+      throw new ForbiddentException("Invalid credentials");
+    }
+    //prepare data
+    const updatedUser = await this.authFactory.updatePassword(updatePasswordDTO);
+    //update user
+    await this.userRepository.update({ _id: userId }, updatedUser);
+    //send response
+    return res.status(200).json({
+      message: "Password updated successfully",
+      success: true,
+    });
+
+  }
+
+
 }
 
 export default new AuthService(); //single ton
