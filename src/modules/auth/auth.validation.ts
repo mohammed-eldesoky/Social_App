@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { GENDER_TYPES, USER_AGENT } from "../../utils";
+
 import {
+  ForgetPasswordDTO,
   LoginDTO,
   RegistterDTO,
   UpdateBasicInfoDTO,
@@ -14,8 +16,9 @@ export const registerSchema = z
   .object<RegistterDTO>({
     fullName: z.string().min(3).max(20) as unknown as string, //TYPE assertion
     email: z.email().optional() as unknown as string,
-    password: z.string().regex(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/) as unknown as string,
+    password: z
+      .string()
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/) as unknown as string,
     phoneNumber: z.string().min(11).max(11).optional() as unknown as string,
     gender: z.enum(GENDER_TYPES) as unknown as GENDER_TYPES,
   })
@@ -28,8 +31,9 @@ export const registerSchema = z
 
 export const loginSchema = z.object<LoginDTO>({
   email: z.email() as unknown as string,
-  password:  z.string().regex(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/) as unknown as string,
+  password: z
+    .string()
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/) as unknown as string,
 });
 
 // verify account validation schema
@@ -51,7 +55,6 @@ export const updatePasswordSchema = z.object<UpdatePasswordDTO>({
     ) as unknown as string,
 });
 
-
 // update basic info and email validation schema
 export const updateBasicInfoSchema = z.object<UpdateBasicInfoDTO>({
   fullName: z.string().min(3).max(20).optional() as unknown as string,
@@ -60,8 +63,14 @@ export const updateBasicInfoSchema = z.object<UpdateBasicInfoDTO>({
   phoneNumber: z.string().min(11).max(11).optional() as unknown as string,
 });
 
-
 // send otp validation schema
-export const sendOtpSchema = z.object<{email:string}>({
-  email: z.string().email() as unknown as string,
+export const sendOtpSchema = z.object<{ email: string }>({
+  email: z.email() as unknown as string,
+});
+
+// reset password validation schema
+export const forgetPasswordSchema = z.object<ForgetPasswordDTO>({
+  email: z.email() as unknown as string,
+  otp: z.string().min(6).max(10) as unknown as string,
+  newPassword: z.string().min(6).max(30) as unknown as string,
 });

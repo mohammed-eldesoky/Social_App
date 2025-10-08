@@ -37,3 +37,10 @@ export interface UpdateBasicInfoDTO {
   email?: string;
   phoneNumber?: string;
 }
+// _____________________forget password ______________________//
+export interface ForgetPasswordDTO {
+  email: string;
+  otp: string;
+  newPassword: string;
+
+}

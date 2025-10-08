@@ -34,7 +34,17 @@ router.post(
   authService.sendOtp
 );
 
-// simulate :
+//______________  forget password route__________________________
+
+router.put(
+  "/forget-password",
+  isValid(authvalidation.forgetPasswordSchema),
+  authService.forgetPassword
+);
+
+
+//________________________________________________________________
+// simulate : problem (this)
 //route >is  {} > from authService is a {} too > inside it a method register
 
 export default router;

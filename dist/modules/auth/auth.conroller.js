@@ -52,6 +52,9 @@ router.post("/update-password", (0, middleware_1.isAuthenticated)(), (0, middlew
 router.post("/login-google", auth_service_1.default.loginWithGoogle);
 //______________  send otp route__________________________
 router.post("/send-otp", (0, middleware_1.isValid)(authvalidation.sendOtpSchema), auth_service_1.default.sendOtp);
-// simulate :
+//______________  forget password route__________________________
+router.put("/forget-password", (0, middleware_1.isValid)(authvalidation.forgetPasswordSchema), auth_service_1.default.forgetPassword);
+//________________________________________________________________
+// simulate : problem (this)
 //route >is  {} > from authService is a {} too > inside it a method register
 exports.default = router;

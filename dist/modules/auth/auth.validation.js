@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendOtpSchema = exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
+exports.forgetPasswordSchema = exports.sendOtpSchema = exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
 const zod_1 = require("zod");
 const utils_1 = require("../../utils");
 // register validaton  schema
@@ -9,7 +9,9 @@ exports.registerSchema = zod_1.z
     .object({
     fullName: zod_1.z.string().min(3).max(20), //TYPE assertion
     email: zod_1.z.email().optional(),
-    password: zod_1.z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
+    password: zod_1.z
+        .string()
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
     phoneNumber: zod_1.z.string().min(11).max(11).optional(),
     gender: zod_1.z.enum(utils_1.GENDER_TYPES),
 })
@@ -20,7 +22,9 @@ exports.registerSchema = zod_1.z
 // login validation schema
 exports.loginSchema = zod_1.z.object({
     email: zod_1.z.email(),
-    password: zod_1.z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
+    password: zod_1.z
+        .string()
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
 });
 // verify account validation schema
 exports.verifyAccountSchema = zod_1.z.object({
@@ -43,5 +47,11 @@ exports.updateBasicInfoSchema = zod_1.z.object({
 });
 // send otp validation schema
 exports.sendOtpSchema = zod_1.z.object({
-    email: zod_1.z.string().email(),
+    email: zod_1.z.email(),
+});
+// reset password validation schema
+exports.forgetPasswordSchema = zod_1.z.object({
+    email: zod_1.z.email(),
+    otp: zod_1.z.string().min(6).max(10),
+    newPassword: zod_1.z.string().min(6).max(30),
 });

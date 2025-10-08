@@ -217,5 +217,37 @@ class AuthService {
             success: true,
         });
     };
+    //__________________________________________________________________________________________________
+    forgetPassword = async (req, res, next) => {
+        //get data from req
+        const forgetPasswordDTO = req.body;
+        //check user existance
+        const userExist = await this.userRepository.exist({ email: forgetPasswordDTO.email });
+        //fail case
+        if (!userExist) {
+            throw new utils_1.NotFoundException("User not found");
+        }
+        // check if otp is valid
+        if (userExist.otp !== forgetPasswordDTO.otp) {
+            throw new utils_1.BadRequestException("Invalid otp");
+        }
+        // check if otp is expired
+        if (userExist.otpExpiryAt < new Date()) {
+            throw new utils_1.BadRequestException("Otp is expired");
+        }
+        // update  password
+        userExist.password = await (0, utils_1.generateHash)(forgetPasswordDTO.newPassword);
+        userExist.otp = undefined;
+        userExist.credenialUpdatedAt = new Date();
+        userExist.otpExpiryAt = undefined;
+        await userExist.save();
+        // destroy all refresh tokens
+        await token_model_1.default.deleteMany({ user: userExist._id, type: utils_1.TOKEN_TYPES.refresh });
+        // send response
+        return res.status(200).json({
+            message: "Password updated successfully",
+            success: true,
+        });
+    };
 }
 exports.default = new AuthService(); //single ton

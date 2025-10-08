@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  ForgetPasswordDTO,
   LoginDTO,
   RegistterDTO,
   UpdateBasicInfoDTO,
@@ -17,6 +18,7 @@ import {
   SYS_ROLES,
   generateOtp,
   generateOtpExpiryTime,
+  generateHash,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -286,6 +288,43 @@ class AuthService {
     //send response
     return res.status(200).json({
       message: "OTP sent successfully",
+      success: true,
+    });
+  };
+
+  //__________________________________________________________________________________________________
+
+  forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    //get data from req
+    const forgetPasswordDTO:ForgetPasswordDTO = req.body;
+    //check user existance
+    const userExist = await this.userRepository.exist({ email: forgetPasswordDTO.email });
+    //fail case
+    if (!userExist) {
+      throw new NotFoundException("User not found");
+    }
+
+    // check if otp is valid
+    if (userExist.otp !== forgetPasswordDTO.otp) {
+      throw new BadRequestException("Invalid otp");
+    }
+
+    // check if otp is expired
+    if (userExist.otpExpiryAt < new Date()) {
+      throw new BadRequestException("Otp is expired");
+    }
+
+    // update  password
+    userExist.password = await generateHash(forgetPasswordDTO.newPassword);
+    userExist.otp = undefined;
+    userExist.credenialUpdatedAt = new Date();
+    userExist.otpExpiryAt = undefined;
+    await userExist.save();
+    // destroy all refresh tokens
+    await Token.deleteMany({ user: userExist._id, type: TOKEN_TYPES.refresh });
+    // send response
+    return res.status(200).json({
+      message: "Password updated successfully",
       success: true,
     });
   };
