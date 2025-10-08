@@ -8,6 +8,7 @@ const DB_1 = require("../../DB");
 const factory_1 = require("./factory");
 const utils_2 = require("../../utils");
 const utils_3 = require("../../utils");
+const utils_4 = require("../../utils");
 const auth_provider_1 = require("./auth.provider");
 const token_model_1 = __importDefault(require("./../../DB/models/token/token.model"));
 const google_auth_library_1 = require("google-auth-library");
@@ -50,8 +51,8 @@ class AuthService {
             throw new utils_1.ForbiddentException("user not found");
         }
         // 3- check password (local accounts only)
-        if (user.userAgent === utils_3.USER_AGENT.local) {
-            const isPasswordValid = await (0, utils_2.compareHash)(loginDTO.password, user.password);
+        if (user.userAgent === utils_4.USER_AGENT.local) {
+            const isPasswordValid = await (0, utils_3.compareHash)(loginDTO.password, user.password);
             if (!isPasswordValid) {
                 throw new utils_1.ForbiddentException("Invalid credentials");
             }
@@ -105,7 +106,7 @@ class AuthService {
             throw new utils_1.NotFoundException("User not found");
         }
         // compare old password
-        const isPasswordValid = await (0, utils_2.compareHash)(updatePasswordDTO.oldPassword, user.password);
+        const isPasswordValid = await (0, utils_3.compareHash)(updatePasswordDTO.oldPassword, user.password);
         if (!isPasswordValid) {
             throw new utils_1.ForbiddentException("Invalid credentials");
         }
@@ -165,7 +166,7 @@ class AuthService {
             const createdUser = await this.userRepository.create({
                 fullName: payload.name,
                 email: payload.email,
-                userAgent: utils_3.USER_AGENT.google,
+                userAgent: utils_4.USER_AGENT.google,
                 role: utils_1.SYS_ROLES.user,
                 isVerified: true,
             });
@@ -175,12 +176,45 @@ class AuthService {
             payload: { _id: userExist._id, role: userExist.role },
             options: { expiresIn: "1d" },
         });
-        return res
-            .status(200)
-            .json({
+        return res.status(200).json({
             message: "Login with google successfully",
             success: true,
             data: { accessToken: token },
+        });
+    };
+    //__________________________________________________________________________________________________
+    sendOtp = async (req, res, next) => {
+        //get data from req
+        const { email } = req.body;
+        //check user existance
+        const userExist = await this.userRepository.exist({ email: email });
+        //fail case
+        if (!userExist) {
+            throw new utils_1.NotFoundException("User not found");
+        }
+        // prevent resend if user is banned
+        if (userExist.banUntil && userExist.banUntil > new Date()) {
+            const remaining = Math.ceil((userExist.banUntil.getTime() - Date.now()) / 1000);
+            throw new utils_1.BadRequestException(`You are temporarily banned. Try again after ${remaining} seconds.`);
+        }
+        //generate otp
+        const otp = (0, utils_1.generateOtp)();
+        const otpExpiryAt = (0, utils_1.generateOtpExpiryTime)(10); // 10 minutes from now
+        //update user
+        await this.userRepository.update({ email: email }, { otp: otp, otpExpiryAt: otpExpiryAt });
+        //send email
+        await (0, utils_2.sendEmail)({
+            from: `"Social App" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: " Confirm Your Account",
+            html: `<h1>Your OTP :${otp} </h1>
+      <p>OTP is valid for 10 minutes</p>
+      `,
+        });
+        //send response
+        return res.status(200).json({
+            message: "OTP sent successfully",
+            success: true,
         });
     };
 }

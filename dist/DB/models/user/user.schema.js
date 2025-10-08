@@ -72,6 +72,9 @@ exports.UserSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    banUntil: {
+        type: Date,
+    },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 //virtual fieldS
 exports.UserSchema.virtual("fullName")
@@ -92,7 +95,7 @@ exports.UserSchema.pre("save", async function (next) {
             to: this.email,
             subject: " Confirm Your Account",
             html: `<h1>Your OTP :${this.otp} </h1>
-      `
+      `,
         });
     }
     next();

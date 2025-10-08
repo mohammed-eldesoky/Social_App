@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
+exports.sendOtpSchema = exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
 const zod_1 = require("zod");
 const utils_1 = require("../../utils");
 // register validaton  schema
@@ -40,4 +40,8 @@ exports.updateBasicInfoSchema = zod_1.z.object({
     gender: zod_1.z.enum(utils_1.GENDER_TYPES).optional(),
     email: zod_1.z.string().email().optional(),
     phoneNumber: zod_1.z.string().min(11).max(11).optional(),
+});
+// send otp validation schema
+exports.sendOtpSchema = zod_1.z.object({
+    email: zod_1.z.string().email(),
 });

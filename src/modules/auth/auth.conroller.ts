@@ -18,12 +18,22 @@ router.post(
 );
 //____________update password route____________________
 router.post(
-  "/update-password",isAuthenticated(),
+  "/update-password",
+  isAuthenticated(),
   isValid(authvalidation.updatePasswordSchema),
   authService.updatePassword
 );
 //____________login with google route____________________
 router.post("/login-google", authService.loginWithGoogle);
+
+//______________  send otp route__________________________
+
+router.post(
+  "/send-otp",
+  isValid(authvalidation.sendOtpSchema),
+  authService.sendOtp
+);
+
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 

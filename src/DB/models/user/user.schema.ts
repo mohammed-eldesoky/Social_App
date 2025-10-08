@@ -28,9 +28,9 @@ export const UserSchema = new Schema<IUser>(
       type: String,
       lowercase: true,
       unique: true,
-      required: function (){
-        if(this.phoneNumber) {
-return false;
+      required: function () {
+        if (this.phoneNumber) {
+          return false;
         }
         return true;
       },
@@ -46,11 +46,11 @@ return false;
       }, // Password is required if userAgent is not 'google'
     },
     credenialUpdatedAt: Date,
-    phoneNumber:{
+    phoneNumber: {
       type: String,
-            required: function (){
-        if(this.email) {
-return false;
+      required: function () {
+        if (this.email) {
+          return false;
         }
         return true;
       },
@@ -76,6 +76,9 @@ return false;
       type: Boolean,
       default: false,
     },
+    banUntil: {
+      type: Date,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -92,20 +95,18 @@ UserSchema.virtual("fullName")
     this.lastName = lastName as string; //TYPE assertion
   });
 
-
-UserSchema.pre("save",async function(next){
-// check if new email  or google login
-if(this.userAgent!=USER_AGENT.google && this.isNew==true){
-
+UserSchema.pre("save", async function (next) {
+  // check if new email  or google login
+  if (this.userAgent != USER_AGENT.google && this.isNew == true) {
     //send email
-  await  sendEmail({
-    from: `"Social App" <${process.env.EMAIL_USER}>`,
-      to:this.email,
-      subject:" Confirm Your Account",
-      html:`<h1>Your OTP :${this.otp} </h1>
-      `
-    })
-}
+    await sendEmail({
+      from: `"Social App" <${process.env.EMAIL_USER}>`,
+      to: this.email,
+      subject: " Confirm Your Account",
+      html: `<h1>Your OTP :${this.otp} </h1>
+      `,
+    });
+  }
 
-next();
-})
+  next();
+});

@@ -23,6 +23,7 @@ export interface IUser {
   otp?: string;
   otpExpiryAt?: Date; //otp
   isVerified?: boolean;
+  banUntil?: Date;
 }
 
 // token

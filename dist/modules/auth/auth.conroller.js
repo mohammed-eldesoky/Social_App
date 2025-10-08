@@ -50,6 +50,8 @@ router.post("/verify-account", (0, middleware_1.isValid)(authvalidation.verifyAc
 router.post("/update-password", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(authvalidation.updatePasswordSchema), auth_service_1.default.updatePassword);
 //____________login with google route____________________
 router.post("/login-google", auth_service_1.default.loginWithGoogle);
+//______________  send otp route__________________________
+router.post("/send-otp", (0, middleware_1.isValid)(authvalidation.sendOtpSchema), auth_service_1.default.sendOtp);
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 exports.default = router;

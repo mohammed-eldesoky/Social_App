@@ -59,3 +59,9 @@ export const updateBasicInfoSchema = z.object<UpdateBasicInfoDTO>({
   email: z.string().email().optional() as unknown as string,
   phoneNumber: z.string().min(11).max(11).optional() as unknown as string,
 });
+
+
+// send otp validation schema
+export const sendOtpSchema = z.object<{email:string}>({
+  email: z.string().email() as unknown as string,
+});

@@ -15,6 +15,8 @@ import {
   generateToken,
   TOKEN_TYPES,
   SYS_ROLES,
+  generateOtp,
+  generateOtpExpiryTime,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -205,7 +207,7 @@ class AuthService {
       success: true,
     });
   };
-  
+
   //__________________________________________________________________________________________________
   loginWithGoogle = async (req: Request, res: Response, next: NextFunction) => {
     // 1- get data from body
@@ -234,13 +236,58 @@ class AuthService {
       options: { expiresIn: "1d" },
     });
 
-    return res
-      .status(200)
-      .json({
-        message: "Login with google successfully",
-        success: true,
-        data: { accessToken: token },
-      });
+    return res.status(200).json({
+      message: "Login with google successfully",
+      success: true,
+      data: { accessToken: token },
+    });
+  };
+
+  //__________________________________________________________________________________________________
+
+  sendOtp = async (req: Request, res: Response, next: NextFunction) => {
+    //get data from req
+    const { email } = req.body;
+    //check user existance
+    const userExist = await this.userRepository.exist({ email: email });
+    //fail case
+    if (!userExist) {
+      throw new NotFoundException("User not found");
+    }
+    // prevent resend if user is banned
+    if (userExist.banUntil && userExist.banUntil > new Date()) {
+      const remaining = Math.ceil(
+        (userExist.banUntil.getTime() - Date.now()) / 1000
+      );
+      throw new BadRequestException(
+        `You are temporarily banned. Try again after ${remaining} seconds.`
+      );
+    }
+
+    //generate otp
+    const otp = generateOtp();
+    const otpExpiryAt = generateOtpExpiryTime(10); // 10 minutes from now
+    //update user
+    await this.userRepository.update(
+      { email: email },
+      { otp: otp, otpExpiryAt: otpExpiryAt }
+    );
+
+    //send email
+    await sendEmail({
+      from: `"Social App" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: " Confirm Your Account",
+      html: `<h1>Your OTP :${otp} </h1>
+      <p>OTP is valid for 10 minutes</p>
+      `,
+    });
+
+    //send response
+    return res.status(200).json({
+      message: "OTP sent successfully",
+      success: true,
+    });
   };
 }
 
