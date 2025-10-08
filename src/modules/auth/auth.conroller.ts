@@ -22,6 +22,8 @@ router.post(
   isValid(authvalidation.updatePasswordSchema),
   authService.updatePassword
 );
+//____________login with google route____________________
+router.post("/login-google", authService.loginWithGoogle);
 // simulate :
 //route >is  {} > from authService is a {} too > inside it a method register
 

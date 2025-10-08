@@ -10,6 +10,7 @@ const utils_2 = require("../../utils");
 const utils_3 = require("../../utils");
 const auth_provider_1 = require("./auth.provider");
 const token_model_1 = __importDefault(require("./../../DB/models/token/token.model"));
+const google_auth_library_1 = require("google-auth-library");
 class AuthService {
     // private dbService  = new DBService<IUser>(User);
     userRepository = new DB_1.UserRepository();
@@ -146,6 +147,40 @@ class AuthService {
         return res.status(200).json({
             message: "Basic info updated successfully",
             success: true,
+        });
+    };
+    //__________________________________________________________________________________________________
+    loginWithGoogle = async (req, res, next) => {
+        // 1- get data from body
+        const { idToken } = req.body;
+        // 2- verify the id token and get user info from google
+        const client = new google_auth_library_1.OAuth2Client(process.env.TOKEN_GOOGLE);
+        // 3- verify the id token
+        const ticket = await client.verifyIdToken({ idToken });
+        const payload = ticket.getPayload(); // {email, name, picture, sub}
+        // 4- check if user exists in our db
+        let userExist = await this.userRepository.exist({ email: payload.email });
+        if (!userExist) {
+            // 5- if not, create a new user
+            const createdUser = await this.userRepository.create({
+                fullName: payload.name,
+                email: payload.email,
+                userAgent: utils_3.USER_AGENT.google,
+                role: utils_1.SYS_ROLES.user,
+                isVerified: true,
+            });
+        }
+        // 6- generate access token
+        const token = (0, utils_1.generateToken)({
+            payload: { _id: userExist._id, role: userExist.role },
+            options: { expiresIn: "1d" },
+        });
+        return res
+            .status(200)
+            .json({
+            message: "Login with google successfully",
+            success: true,
+            data: { accessToken: token },
         });
     };
 }

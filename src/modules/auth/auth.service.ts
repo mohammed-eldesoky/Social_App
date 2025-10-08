@@ -14,6 +14,7 @@ import {
   ForbiddentException,
   generateToken,
   TOKEN_TYPES,
+  SYS_ROLES,
 } from "../../utils";
 import { UserRepository } from "../../DB";
 import { AuthFactory } from "./factory";
@@ -22,6 +23,7 @@ import { compareHash } from "../../utils";
 import { USER_AGENT } from "../../utils";
 import { authProvider } from "./auth.provider";
 import Token from "./../../DB/models/token/token.model";
+import { OAuth2Client } from "google-auth-library";
 
 class AuthService {
   // private dbService  = new DBService<IUser>(User);
@@ -162,6 +164,7 @@ class AuthService {
       success: true,
     });
   };
+
   //__________________________________________________________________________________________________
   updateBasicInfoAndEmail = async (
     req: Request,
@@ -201,6 +204,43 @@ class AuthService {
       message: "Basic info updated successfully",
       success: true,
     });
+  };
+  
+  //__________________________________________________________________________________________________
+  loginWithGoogle = async (req: Request, res: Response, next: NextFunction) => {
+    // 1- get data from body
+    const { idToken } = req.body;
+    // 2- verify the id token and get user info from google
+    const client = new OAuth2Client(process.env.TOKEN_GOOGLE);
+    // 3- verify the id token
+    const ticket = await client.verifyIdToken({ idToken });
+
+    const payload = ticket.getPayload(); // {email, name, picture, sub}
+    // 4- check if user exists in our db
+    let userExist = await this.userRepository.exist({ email: payload.email });
+    if (!userExist) {
+      // 5- if not, create a new user
+      const createdUser = await this.userRepository.create({
+        fullName: payload.name,
+        email: payload.email,
+        userAgent: USER_AGENT.google,
+        role: SYS_ROLES.user,
+        isVerified: true,
+      });
+    }
+    // 6- generate access token
+    const token = generateToken({
+      payload: { _id: userExist._id, role: userExist.role },
+      options: { expiresIn: "1d" },
+    });
+
+    return res
+      .status(200)
+      .json({
+        message: "Login with google successfully",
+        success: true,
+        data: { accessToken: token },
+      });
   };
 }
 
