@@ -47,7 +47,7 @@ router.post("/register", (0, middleware_1.isValid)(authvalidation.registerSchema
 router.post("/login", (0, middleware_1.isValid)(authvalidation.loginSchema), auth_service_1.default.login);
 router.post("/verify-account", (0, middleware_1.isValid)(authvalidation.verifyAccountSchema), auth_service_1.default.verifyAccount);
 //____________update password route____________________
-router.post("/update-password", (0, middleware_1.isValid)(authvalidation.updatePasswordSchema), auth_service_1.default.updatePassword);
+router.post("/update-password", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(authvalidation.updatePasswordSchema), auth_service_1.default.updatePassword);
 //____________login with google route____________________
 router.post("/login-google", auth_service_1.default.loginWithGoogle);
 // simulate :

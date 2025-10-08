@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authService from "./auth.service";
-import { isValid } from "../../middleware";
+import { isAuthenticated, isValid } from "../../middleware";
 import * as authvalidation from "./auth.validation";
 const router = Router();
 //____________register route____________________
@@ -18,7 +18,7 @@ router.post(
 );
 //____________update password route____________________
 router.post(
-  "/update-password",
+  "/update-password",isAuthenticated(),
   isValid(authvalidation.updatePasswordSchema),
   authService.updatePassword
 );
