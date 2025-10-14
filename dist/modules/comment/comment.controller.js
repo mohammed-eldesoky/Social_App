@@ -12,10 +12,16 @@ const router = (0, express_1.Router)({ mergeParams: true });
 router.post("{/:id}", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(comment_validation_1.createPostSchema), comment_service_1.default.createComment);
 // get specific comment  : /post/postId/comment/id
 router.get("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.getSpecificComment);
+//______________________________________________________________________________
 // delete comment  : /post/postId/comment/id
 router.delete("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.deleteComment);
+//______________________________________________________________________________
 // react to comment  : /post/postId/comment/id
 router.patch("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.reactComment);
+//______________________________________________________________________________
 // freeze comment  : /post/postId/comment/id
 router.patch("/:id/freeze", (0, middleware_1.isAuthenticated)(), comment_service_1.default.freezeComment);
+//______________________________________________________________________________
+// update comment  : /post/postId/comment/id
+router.put("/:id/update", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(comment_validation_1.updatePostSchema), comment_service_1.default.updateComment);
 exports.default = router;

@@ -133,5 +133,31 @@ class CommentService {
             data: { frozenComment },
         });
     };
+    //__________________________ update comment_________________________//
+    updateComment = async (req, res, next) => {
+        //get data from req
+        const { id } = req.params; //comment id
+        const updateCommentDTO = req.body;
+        //check if comment exists
+        const commentExist = await this.commentRepository.exist({ _id: id });
+        //fail case
+        if (!commentExist) {
+            throw new utils_1.NotFoundException("comment not found to be updated");
+        }
+        //check if user is the owner of the comment
+        if (commentExist.userId.toString() != req.user._id.toString()) {
+            throw new utils_1.UnAuthorizedException("you are not allowed to update this comment");
+        }
+        //prepare data to be updated
+        const comment = this.commentFactory.update(updateCommentDTO, commentExist.id, req.user, commentExist);
+        // update comment from db
+        const updatedComment = await this.commentRepository.update({ _id: id }, updateCommentDTO);
+        //send res
+        return res.status(200).json({
+            message: "comment updated successfully",
+            success: true,
+            data: { updatedComment },
+        });
+    };
 }
 exports.default = new CommentService();

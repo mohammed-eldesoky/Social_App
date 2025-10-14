@@ -13,5 +13,13 @@ class CommentFactory {
         newComment.reactions = [];
         return newComment;
     }
+    // update
+    update(updateCommentDTO, post, user, comment) {
+        const upateComment = new entity_1.Commment();
+        upateComment.content = updateCommentDTO.content;
+        upateComment.userId = user._id;
+        upateComment.postId = post._id || comment.postId; //reply
+        return upateComment;
+    }
 }
 exports.CommentFactory = CommentFactory;

@@ -1,6 +1,6 @@
 import { Icomment, Ipost, IUser } from "../../../utils";
 import { Commment } from "../entity";
-import { CreateCommentDTO } from "./../comment.dto";
+import { CreateCommentDTO, UpdateCommentDTO } from "./../comment.dto";
 export class CommentFactory {
   // create
   create(
@@ -18,4 +18,21 @@ export class CommentFactory {
 
     return newComment;
   }
+
+// update
+update (
+  updateCommentDTO:UpdateCommentDTO,
+  post:Ipost,
+  user:IUser,
+  comment?:Icomment
+
+){
+    const upateComment = new Commment();
+    upateComment.content = updateCommentDTO.content;
+    upateComment.userId = user._id;
+    upateComment.postId = post._id || comment.postId; //reply
+
+    return upateComment;
+}
+
 }

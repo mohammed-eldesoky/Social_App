@@ -7,7 +7,7 @@ import {
 } from "../../utils";
 import { PostRepository } from "./../../DB/models/post/post.repository";
 import { CommentFactory } from "./factory/index";
-import { CreateCommentDTO } from "./comment.dto";
+import { CreateCommentDTO, UpdateCommentDTO } from "./comment.dto";
 import th from "zod/v4/locales/th.js";
 import path from "path";
 import { addReactProvider } from "../../utils/common/providers/react.provider";
@@ -195,6 +195,47 @@ class CommentService {
       message: ` comment ${isFrozen ? "frozen" : "un-frozen"}  successfully`,
       success: true,
       data: { frozenComment },
+    });
+  };
+
+  //__________________________ update comment_________________________//
+  public updateComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //get data from req
+    const { id } = req.params; //comment id
+    const updateCommentDTO: UpdateCommentDTO = req.body;
+    //check if comment exists
+    const commentExist = await this.commentRepository.exist({ _id: id });
+    //fail case
+    if (!commentExist) {
+      throw new NotFoundException("comment not found to be updated");
+    }
+    //check if user is the owner of the comment
+    if (commentExist.userId.toString() != req.user._id.toString()) {
+      throw new UnAuthorizedException(
+        "you are not allowed to update this comment"
+      );
+    }
+    //prepare data to be updated
+    const comment = this.commentFactory.update(
+      updateCommentDTO,
+      commentExist.id,
+      req.user,
+      commentExist
+    );
+    // update comment from db
+    const updatedComment = await this.commentRepository.update(
+      { _id: id },
+      updateCommentDTO
+    );
+    //send res
+    return res.status(200).json({
+      message: "comment updated successfully",
+      success: true,
+      data: { updatedComment },
     });
   };
 }
