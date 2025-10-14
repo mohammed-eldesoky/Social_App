@@ -16,4 +16,6 @@ router.get("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.defaul
 router.delete("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.deleteComment);
 // react to comment  : /post/postId/comment/id
 router.patch("/:id", (0, middleware_1.isAuthenticated)(), comment_service_1.default.reactComment);
+// freeze comment  : /post/postId/comment/id
+router.patch("/:id/freeze", (0, middleware_1.isAuthenticated)(), comment_service_1.default.freezeComment);
 exports.default = router;

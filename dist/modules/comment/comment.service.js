@@ -74,7 +74,8 @@ class CommentService {
         }
         //check if user is the owner of the comment
         if (commentExist.userId.toString() != req.user._id.toString() &&
-            commentExist.postId.userId.toString() != req.user._id.toString()) {
+            commentExist.postId.userId.toString() !=
+                req.user._id.toString()) {
             throw new utils_1.UnAuthorizedException("you are not allowed to delete this comment");
         }
         // delete comment from db
@@ -96,6 +97,41 @@ class CommentService {
         await (0, react_provider_1.addReactProvider)(this.commentRepository, id, userId, reaction);
         //send res
         return res.sendStatus(204);
+    };
+    // _________________________ freeze comment_________________________//
+    freezeComment = async (req, res, next) => {
+        // get data from req
+        const { id } = req.params; //comment id
+        // check if comment exists
+        const commentExist = await this.commentRepository.exist({ _id: id });
+        //fail case
+        if (!commentExist) {
+            throw new utils_1.NotFoundException("comment not found to be frozen");
+        }
+        // get the post related to this comment
+        const post = await this.postRepository.exist({ _id: commentExist.postId });
+        // fail case
+        if (!post) {
+            throw new utils_1.NotFoundException("post not found to be frozen");
+        }
+        // check if post is frozen
+        if (post.isFrozen) {
+            throw new utils_1.BadRequestException("Cannot modify a comment on a frozen post");
+        }
+        //check if user is the owner of the comment
+        if (commentExist.userId.toString() != req.user._id.toString()) {
+            throw new utils_1.UnAuthorizedException("you are not allowed to freeze this comment");
+        }
+        // check if comment is  frozen  or not
+        const isFrozen = !commentExist.isFrozen;
+        // freeze comment from db
+        const frozenComment = await this.commentRepository.update({ _id: id }, { isFrozen });
+        //send res
+        return res.status(200).json({
+            message: ` comment ${isFrozen ? "frozen" : "un-frozen"}  successfully`,
+            success: true,
+            data: { frozenComment },
+        });
     };
 }
 exports.default = new CommentService();

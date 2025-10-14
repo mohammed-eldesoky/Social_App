@@ -35,6 +35,10 @@ exports.commentSchema = new mongoose_1.Schema({
     mentions: {
         type: [mongoose_1.Schema.Types.ObjectId],
     },
+    isFrozen: {
+        type: Boolean,
+        default: false,
+    }
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 exports.commentSchema.virtual("replies", {
     ref: "Comment",

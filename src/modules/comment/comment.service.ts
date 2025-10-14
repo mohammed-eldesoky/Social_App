@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { CommentRepository } from "./../../DB/models/commmet/comments.repository";
-import { NotFoundException, UnAuthorizedException } from "../../utils";
+import {
+  BadRequestException,
+  NotFoundException,
+  UnAuthorizedException,
+} from "../../utils";
 import { PostRepository } from "./../../DB/models/post/post.repository";
 import { CommentFactory } from "./factory/index";
 import { CreateCommentDTO } from "./comment.dto";
@@ -112,8 +116,11 @@ class CommentService {
       throw new NotFoundException("comment not found to be deleted");
     }
     //check if user is the owner of the comment
-    if (commentExist.userId.toString() != req.user._id.toString()&&
-    (commentExist.postId as unknown as any).userId.toString() != req.user._id.toString()) {
+    if (
+      commentExist.userId.toString() != req.user._id.toString() &&
+      (commentExist.postId as unknown as any).userId.toString() !=
+        req.user._id.toString()
+    ) {
       throw new UnAuthorizedException(
         "you are not allowed to delete this comment"
       );
@@ -128,20 +135,68 @@ class CommentService {
     });
   };
 
-// _________________________ react to comment_________________________//
+  // _________________________ react to comment_________________________//
 
-public reactComment = async (req: Request, res: Response, next: NextFunction) => {
-//get data from req
-const { id } = req.params;
-const userId = req.user._id;
-const { reaction } = req.body;
-//add or remove reaction
- await  addReactProvider(this.commentRepository,id,userId,reaction);
- //send res
- return res.sendStatus(204)
+  public reactComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //get data from req
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { reaction } = req.body;
+    //add or remove reaction
+    await addReactProvider(this.commentRepository, id, userId, reaction);
+    //send res
+    return res.sendStatus(204);
+  };
 
-}
+  // _________________________ freeze comment_________________________//
 
+  public freezeComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    // get data from req
+    const { id } = req.params; //comment id
+    // check if comment exists
+    const commentExist = await this.commentRepository.exist({ _id: id });
+    //fail case
+    if (!commentExist) {
+      throw new NotFoundException("comment not found to be frozen");
+    }
+    // get the post related to this comment
+    const post = await this.postRepository.exist({ _id: commentExist.postId });
+    // fail case
+    if (!post) {
+      throw new NotFoundException("post not found to be frozen");
+    }
+    // check if post is frozen
+    if (post.isFrozen) {
+      throw new BadRequestException("Cannot modify a comment on a frozen post");
+    }
+    //check if user is the owner of the comment
+    if (commentExist.userId.toString() != req.user._id.toString()) {
+      throw new UnAuthorizedException(
+        "you are not allowed to freeze this comment"
+      );
+    }
+    // check if comment is  frozen  or not
+    const isFrozen = !commentExist.isFrozen;
+    // freeze comment from db
+    const frozenComment = await this.commentRepository.update(
+      { _id: id },
+      { isFrozen }
+    );
+    //send res
+    return res.status(200).json({
+      message: ` comment ${isFrozen ? "frozen" : "un-frozen"}  successfully`,
+      success: true,
+      data: { frozenComment },
+    });
+  };
 }
 
 export default new CommentService();

@@ -19,4 +19,6 @@ router.get("/:id", isAuthenticated(), commentService.getSpecificComment);
 router.delete("/:id", isAuthenticated(), commentService.deleteComment);
 // react to comment  : /post/postId/comment/id
 router.patch("/:id", isAuthenticated(), commentService.reactComment);
+// freeze comment  : /post/postId/comment/id
+router.patch("/:id/freeze", isAuthenticated(), commentService.freezeComment);
 export default router;

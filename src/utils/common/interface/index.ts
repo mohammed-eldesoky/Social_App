@@ -83,4 +83,5 @@ export interface Icomment {
   reactions: Ireaction[];
   attachments: Iattachment[];
   mentions?: ObjectId[];
+  isFrozen?: boolean;
 }

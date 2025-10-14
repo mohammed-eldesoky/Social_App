@@ -37,6 +37,10 @@ export const commentSchema = new Schema<Icomment>(
     mentions: {
       type: [Schema.Types.ObjectId],
     },
+    isFrozen: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
