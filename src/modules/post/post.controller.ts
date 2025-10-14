@@ -22,7 +22,7 @@ router.delete("/:id", isAuthenticated(), postService.deletePost);
 router.patch("/:id/freeze", isAuthenticated(), postService.freezePost);
 
 // update post
-router.put("/:id/update", isAuthenticated(),isValid(updatePostSchema),postService.updatePost);
+router.patch("/:id/update", isAuthenticated(),isValid(updatePostSchema),postService.updatePost);
 /**
  * @route_Comment
  */

@@ -30,5 +30,5 @@ router.patch("/:id/freeze", isAuthenticated(), commentService.freezeComment);
 //______________________________________________________________________________
 
 // update comment  : /post/postId/comment/id
-router.put("/:id/update", isAuthenticated(),isValid(updatePostSchema) ,commentService.updateComment);
+router.patch("/:id/update", isAuthenticated(),isValid(updatePostSchema) ,commentService.updateComment);
 export default router;

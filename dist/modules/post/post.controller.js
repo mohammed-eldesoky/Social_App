@@ -20,7 +20,7 @@ router.delete("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.defaul
 // freeze post
 router.patch("/:id/freeze", (0, middleware_1.isAuthenticated)(), post_service_1.default.freezePost);
 // update post
-router.put("/:id/update", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(post_vallidation_1.updatePostSchema), post_service_1.default.updatePost);
+router.patch("/:id/update", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(post_vallidation_1.updatePostSchema), post_service_1.default.updatePost);
 /**
  * @route_Comment
  */
