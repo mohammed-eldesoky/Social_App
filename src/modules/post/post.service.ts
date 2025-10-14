@@ -3,6 +3,7 @@ import { PostDTO } from "./post.dto";
 import { postFactory } from "./factory/index";
 import { PostRepository } from "../../DB/models/post/post.repository";
 import {
+  BadRequestException,
   NotFoundException,
   UnAuthorizedException,
   USER_REACTIONS,
@@ -144,6 +145,44 @@ class PostService {
     res.status(200).json({
       message: `post is ${isFrozen ? "frozen" : "un-frozen"} successfully`,
       success: true,
+    });
+  };
+
+  //__________________________ update post ___________________________________//
+  public updatePost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    //1-get data from req
+    const { id } = req.params; //post id
+    const postDTO: PostDTO = req.body;
+    //2-check if post exists
+    const postExist = await this.postRepository.exist({ _id: id });
+    //fail case
+    if (!postExist) {
+      throw new NotFoundException("post not found");
+    }
+    //check if user is the owner of the post
+    if (postExist.userId.toString() != req.user._id.toString()) {
+      throw new UnAuthorizedException(
+        "you are not allowed to update this post"
+      );
+    }
+    // check if post is  frozen  or not
+    if (postExist.isFrozen) {
+      throw new BadRequestException("post is frozen you can't update it");
+    }
+    //prepare data
+    const post = this.postFactory.updatePost(postDTO);
+
+    //3-update post
+    const updatedPost = await this.postRepository.update({ _id: id }, post);
+    //4- send response
+    res.status(200).json({
+      message: "post updated successfully",
+      success: true,
+      data: updatedPost,
     });
   };
 }

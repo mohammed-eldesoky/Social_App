@@ -2,7 +2,7 @@ import { Router } from "express";
 import { isAuthenticated, isValid } from "../../middleware";
 import postService from "./post.service";
 import { commentRouter } from "..";
-import { createPostSchema } from "./post.vallidation";
+import { createPostSchema, updatePostSchema } from "./post.vallidation";
 
 
 const router = Router();
@@ -21,6 +21,8 @@ router.delete("/:id", isAuthenticated(), postService.deletePost);
 // freeze post
 router.patch("/:id/freeze", isAuthenticated(), postService.freezePost);
 
+// update post
+router.put("/:id/update", isAuthenticated(),isValid(updatePostSchema),postService.updatePost);
 /**
  * @route_Comment
  */

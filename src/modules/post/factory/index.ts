@@ -16,7 +16,12 @@ export class postFactory{
 return newPost;
 };
 
-  updatePost(){};
+  updatePost(postDTO: PostDTO){
+     const updatePost = new Post() 
+     updatePost.content=postDTO.content;
+
+     return updatePost;
+  };
 
 
 }

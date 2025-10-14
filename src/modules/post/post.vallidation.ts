@@ -9,3 +9,7 @@ content: z.string().min(3).max(500) as unknown as string,
 
 
 
+export const updatePostSchema = z.object<PostDTO>({
+    content: z.string().min(3).max(500) as unknown as string,
+  
+})

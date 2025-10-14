@@ -151,7 +151,7 @@ class CommentService {
         //prepare data to be updated
         const comment = this.commentFactory.update(updateCommentDTO, commentExist.id, req.user, commentExist);
         // update comment from db
-        const updatedComment = await this.commentRepository.update({ _id: id }, updateCommentDTO);
+        const updatedComment = await this.commentRepository.update({ _id: id }, comment);
         //send res
         return res.status(200).json({
             message: "comment updated successfully",

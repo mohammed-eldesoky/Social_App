@@ -19,6 +19,8 @@ router.get("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.g
 router.delete("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.deletePost);
 // freeze post
 router.patch("/:id/freeze", (0, middleware_1.isAuthenticated)(), post_service_1.default.freezePost);
+// update post
+router.put("/:id/update", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(post_vallidation_1.updatePostSchema), post_service_1.default.updatePost);
 /**
  * @route_Comment
  */

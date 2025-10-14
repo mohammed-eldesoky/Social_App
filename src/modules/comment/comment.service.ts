@@ -229,7 +229,7 @@ class CommentService {
     // update comment from db
     const updatedComment = await this.commentRepository.update(
       { _id: id },
-      updateCommentDTO
+      comment
     );
     //send res
     return res.status(200).json({

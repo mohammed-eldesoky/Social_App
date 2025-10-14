@@ -13,7 +13,11 @@ class postFactory {
         return newPost;
     }
     ;
-    updatePost() { }
+    updatePost(postDTO) {
+        const updatePost = new entity_1.Post();
+        updatePost.content = postDTO.content;
+        return updatePost;
+    }
     ;
 }
 exports.postFactory = postFactory;
