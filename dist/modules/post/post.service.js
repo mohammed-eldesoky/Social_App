@@ -77,5 +77,29 @@ class PostService {
             success: true,
         });
     };
+    // ___________________________ freeze post ___________________________________//
+    freezePost = async (req, res, next) => {
+        // get data from req
+        const { id } = req.params; //post id
+        // check if post exists
+        const postExist = await this.postRepository.exist({ _id: id });
+        //fail case
+        if (!postExist) {
+            throw new utils_1.NotFoundException("post not found");
+        }
+        // check if user is the owner of the post
+        if (postExist.userId.toString() != req.user._id.toString()) {
+            throw new utils_1.UnAuthorizedException("you are not allowed to freeze this post");
+        }
+        // check if post is  frozen  or not
+        const isFrozen = !postExist.isFrozen;
+        // freeze post
+        await this.postRepository.update({ _id: id }, { isFrozen });
+        // send response
+        res.status(200).json({
+            message: `post is ${isFrozen ? "frozen" : "un-frozen"} successfully`,
+            success: true,
+        });
+    };
 }
 exports.default = new PostService();

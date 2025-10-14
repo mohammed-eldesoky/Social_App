@@ -70,6 +70,7 @@ export interface Ipost {
   content: string;
   reactions: Ireaction[];
   attachments?: Iattachment[];
+  isFrozen?: boolean;
 }
 
 // ______________comment___________

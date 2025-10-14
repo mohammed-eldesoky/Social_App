@@ -18,6 +18,8 @@ router.get("/:id", isAuthenticated(), postService.getSpecificPost);
 // delete post
 router.delete("/:id", isAuthenticated(), postService.deletePost);
 
+// freeze post
+router.patch("/:id/freeze", isAuthenticated(), postService.freezePost);
 
 /**
  * @route_Comment
