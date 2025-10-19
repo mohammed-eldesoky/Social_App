@@ -8,7 +8,7 @@ const socketAuth = async (socket, next) => {
         const { authorization } = socket.handshake.auth;
         const payload = (0, utils_1.verifyToken)(authorization); //throw error
         const userRepository = new DB_1.UserRepository();
-        const user = userRepository.getOne({ _id: payload._id });
+        const user = await userRepository.getOne({ _id: payload._id });
         if (!user) {
             throw new utils_1.NotFoundException("User not found");
         }
