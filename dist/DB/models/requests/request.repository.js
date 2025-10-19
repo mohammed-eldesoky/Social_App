@@ -1,0 +1,14 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequestRepository = void 0;
+const abstract_repository_1 = require("../../abstract.repository");
+const request_model_1 = __importDefault(require("./request.model"));
+class RequestRepository extends abstract_repository_1.AbstractRepository {
+    constructor() {
+        super(request_model_1.default);
+    }
+}
+exports.RequestRepository = RequestRepository;

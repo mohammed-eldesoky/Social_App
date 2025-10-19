@@ -66,7 +66,7 @@ export interface Ireaction {
 
 // ______________post___________
 export interface Ipost {
-  _id:ObjectId;
+  _id: ObjectId;
   userId: ObjectId;
   content: string;
   reactions: Ireaction[];
@@ -76,7 +76,7 @@ export interface Ipost {
 
 // ______________comment___________
 export interface Icomment {
-  _id:ObjectId;
+  _id: ObjectId;
   userId: ObjectId;
   postId: ObjectId;
   parentId: ObjectId | null;
@@ -99,4 +99,14 @@ export interface Imessage {
 export interface Ichat {
   users: ObjectId[];
   messages: ObjectId[];
+}
+
+//___________request__________
+export interface Irequest {
+  _id?: ObjectId;
+  sender: ObjectId;
+  receiver: ObjectId;
+  status?: "pending" | "accepted" | "rejected";
+  createdAt?: Date;
+  updatedAt?: Date;
 }
