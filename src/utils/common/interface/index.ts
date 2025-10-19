@@ -86,3 +86,20 @@ export interface Icomment {
   mentions?: ObjectId[];
   isFrozen?: boolean;
 }
+
+//_______________message___________
+
+export interface Imessage {
+  _id: ObjectId;
+  sender: ObjectId;
+  receiver: ObjectId;
+  content: string;
+  attachments?: Iattachment[];
+}
+
+//_______________chat___________
+export interface Ichat {
+  _id: ObjectId;
+  users: ObjectId[];
+  messages: Imessage[];
+}
