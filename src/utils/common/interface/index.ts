@@ -90,16 +90,13 @@ export interface Icomment {
 //_______________message___________
 
 export interface Imessage {
-  _id: ObjectId;
   sender: ObjectId;
-  receiver: ObjectId;
   content: string;
-  attachments?: Iattachment[];
+  attachments?: ObjectId[];
 }
 
 //_______________chat___________
 export interface Ichat {
-  _id: ObjectId;
   users: ObjectId[];
-  messages: Imessage[];
+  messages: ObjectId[];
 }
