@@ -19,6 +19,8 @@ function bootstrap(app, express) {
     app.use("/post", modules_1.postRouter);
     //comments  
     app.use("/comment", modules_1.commentRouter);
+    //chat
+    app.use("/chat", modules_1.chatRouter);
     //messages
     app.use("/{*dummy}", (req, res, next) => {
         return res.status(404).json({ message: "invalid roueter", success: false });

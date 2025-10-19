@@ -4,7 +4,7 @@ import Chat from "./chat.model";
 
 
 
-export class MessageRepository extends AbstractRepository <Ichat>{
+export class ChatRepository extends AbstractRepository <Ichat>{
     
 constructor() {
     super(Chat);

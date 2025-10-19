@@ -18,3 +18,5 @@ __exportStar(require("./connection"), exports);
 __exportStar(require("./models/user/user.repository"), exports);
 __exportStar(require("./models/post/post.repository"), exports);
 __exportStar(require("./models/commmet/comments.repository"), exports);
+__exportStar(require("./models/message/message.repository"), exports);
+__exportStar(require("./models/chat/chat.repository"), exports);
