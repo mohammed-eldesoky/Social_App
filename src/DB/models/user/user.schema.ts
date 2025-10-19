@@ -6,6 +6,7 @@ import {
   USER_AGENT,
 } from "../../../utils/common/enum";
 import { sendEmail } from "../../../utils";
+import { ref } from "node:process";
 // Define the User schema
 export const UserSchema = new Schema<IUser>(
   {
@@ -79,6 +80,12 @@ export const UserSchema = new Schema<IUser>(
     banUntil: {
       type: Date,
     },
+    friends:[
+      {
+        type:Schema.Types.ObjectId,
+        ref:"User"
+      }
+    ]
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

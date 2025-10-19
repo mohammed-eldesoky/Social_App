@@ -75,6 +75,12 @@ exports.UserSchema = new mongoose_1.Schema({
     banUntil: {
         type: Date,
     },
+    friends: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 //virtual fieldS
 exports.UserSchema.virtual("fullName")

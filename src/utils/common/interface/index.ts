@@ -24,6 +24,7 @@ export interface IUser {
   otpExpiryAt?: Date; //otp
   isVerified?: boolean;
   banUntil?: Date;
+  friends: ObjectId[];
 }
 
 // token
