@@ -25,6 +25,7 @@ export interface IUser {
   isVerified?: boolean;
   banUntil?: Date;
   friends: ObjectId[];
+  blockedUsers: ObjectId[];
 }
 
 // token

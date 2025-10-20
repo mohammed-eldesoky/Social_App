@@ -85,7 +85,14 @@ export const UserSchema = new Schema<IUser>(
         type:Schema.Types.ObjectId,
         ref:"User"
       }
+    ],
+    blockedUsers:[
+      {
+        type:Schema.Types.ObjectId,
+        ref:"User"
+      }
     ]
+
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
