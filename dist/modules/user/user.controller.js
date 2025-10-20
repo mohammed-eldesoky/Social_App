@@ -11,4 +11,6 @@ const router = (0, express_1.Router)();
 router.get("/profile", (0, middleware_1.isAuthenticated)(), user_service_1.default.getProfile);
 // block user
 router.post("/block/:targetId", (0, middleware_1.isAuthenticated)(), user_service_1.default.blockUser);
+// unfriend
+router.delete("/unfriend/:friendId", (0, middleware_1.isAuthenticated)(), user_service_1.default.unFriend);
 exports.default = router;

@@ -7,5 +7,7 @@ const router = Router();
 router.get("/profile",isAuthenticated(),userService.getProfile)
 // block user
 router.post("/block/:targetId",isAuthenticated(),userService.blockUser)
+// unfriend
+router.delete("/unfriend/:friendId",isAuthenticated(),userService.unFriend)
 
 export default router;

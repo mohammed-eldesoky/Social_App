@@ -30,5 +30,27 @@ class UserService {
             .status(200)
             .json({ message: "User blocked successfully", success: true });
     };
+    //_________________unfriend ____________________
+    unFriend = async (req, res, next) => {
+        //get data from req
+        const userId = req.user._id;
+        const { friendId } = req.params;
+        //check if user not self
+        if (userId.toString() === friendId) {
+            throw new utils_1.BadRequestException("You cannot unfriend yourself");
+        }
+        //check if target user exist
+        const targetUserExist = await this.userRepository.exist({ _id: friendId });
+        if (!targetUserExist) {
+            throw new utils_1.NotFoundException("Target user not found");
+        }
+        //unfriend user
+        await this.userRepository.update({ _id: userId }, { $pull: { friends: friendId } });
+        await this.userRepository.update({ _id: friendId }, { $pull: { friends: userId } });
+        //send response
+        return res
+            .status(200)
+            .json({ message: "User unfriended successfully", success: true });
+    };
 }
 exports.default = new UserService(); //single ton
