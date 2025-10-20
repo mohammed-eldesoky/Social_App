@@ -13,4 +13,6 @@ router.post("/:receiverId", (0, middleware_1.isAuthenticated)(), request_service
 router.get("/", (0, middleware_1.isAuthenticated)(), request_service_1.default.getAllRequest);
 //accept request
 router.patch("/:requestId/accept", (0, middleware_1.isAuthenticated)(), request_service_1.default.acceptRequest);
+//delete request
+router.delete("/:requestId", (0, middleware_1.isAuthenticated)(), request_service_1.default.deleteRequest);
 exports.default = router;

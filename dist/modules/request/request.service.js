@@ -85,5 +85,23 @@ class RequestService {
             .status(200)
             .json({ message: "request accepted", success: true, data: { request } });
     };
+    //_________________________delete request__________________________
+    deleteRequest = async (req, res, next) => {
+        //get data from req
+        const { requestId } = req.params;
+        const userId = req.user._id;
+        //check if request exist
+        const requestExist = await this.requestRepository.exist({ _id: requestId });
+        //fail case
+        if (!requestExist) {
+            throw new index_1.NotFoundException("request not found");
+        }
+        //delete request
+        const request = await this.requestRepository.delete({ _id: requestId });
+        //send response
+        return res
+            .status(200)
+            .json({ message: "request deleted", success: true, data: { request } });
+    };
 }
 exports.default = new RequestService();
