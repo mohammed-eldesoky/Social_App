@@ -9,4 +9,7 @@ const router = Router();
 router.post("/:receiverId", isAuthenticated(), requestService.sendRequest);
 //get all requests
 router.get("/", isAuthenticated(), requestService.getAllRequest);
+//accept request
+router.patch("/:requestId/accept", isAuthenticated(), requestService.acceptRequest);
+
 export default router;

@@ -11,4 +11,6 @@ const router = (0, express_1.Router)();
 router.post("/:receiverId", (0, middleware_1.isAuthenticated)(), request_service_1.default.sendRequest);
 //get all requests
 router.get("/", (0, middleware_1.isAuthenticated)(), request_service_1.default.getAllRequest);
+//accept request
+router.patch("/:requestId/accept", (0, middleware_1.isAuthenticated)(), request_service_1.default.acceptRequest);
 exports.default = router;
