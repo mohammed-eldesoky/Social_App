@@ -104,8 +104,8 @@ export interface Ichat {
 //___________request__________
 export interface Irequest {
   _id?: ObjectId;
-  sender: ObjectId;
-  receiver: ObjectId;
+  sender:ObjectId ;
+  receiver: ObjectId | string;
   status?: "pending" | "accepted" | "rejected";
   createdAt?: Date;
   updatedAt?: Date;

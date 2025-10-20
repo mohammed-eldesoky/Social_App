@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.chatRouter = exports.commentRouter = exports.postRouter = exports.userRouter = exports.authRouter = void 0;
+exports.requestRouter = exports.chatRouter = exports.commentRouter = exports.postRouter = exports.userRouter = exports.authRouter = void 0;
 const auth_conroller_1 = __importDefault(require("./auth/auth.conroller"));
 exports.authRouter = auth_conroller_1.default;
 const user_controller_1 = __importDefault(require("./user/user.controller"));
@@ -14,3 +14,5 @@ const post_controller_1 = __importDefault(require("./post/post.controller"));
 exports.postRouter = post_controller_1.default;
 const chat_controller_1 = __importDefault(require("./chat/chat.controller"));
 exports.chatRouter = chat_controller_1.default;
+const request_controller_1 = __importDefault(require("./request/request.controller"));
+exports.requestRouter = request_controller_1.default;

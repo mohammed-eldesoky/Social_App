@@ -10,5 +10,10 @@ class RequestRepository extends abstract_repository_1.AbstractRepository {
     constructor() {
         super(request_model_1.default);
     }
+    async getUserRequests(userId) {
+        return await this.model.find({
+            $or: [{ sender: userId }, { receiver: userId }],
+        });
+    }
 }
 exports.RequestRepository = RequestRepository;

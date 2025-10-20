@@ -1,5 +1,5 @@
 import type { Express, NextFunction , Response,Request, ErrorRequestHandler} from "express";
-import { authRouter, chatRouter, commentRouter, postRouter, userRouter } from "./modules";
+import { authRouter, chatRouter, commentRouter, postRouter, requestRouter, userRouter } from "./modules";
 import { connectDB } from "./DB";
 import { AppError } from "./utils";
 import cors from "cors";
@@ -20,6 +20,8 @@ app.use("/post",postRouter)
 app.use("/comment",commentRouter)
 //chat
 app.use("/chat",chatRouter)
+//requests
+app.use("/request",requestRouter)
 //messages
 
 app.use("/{*dummy}",(req,res,next)=>{
