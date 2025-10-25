@@ -20,7 +20,7 @@ export class AuthFactory {
     user.email = registterDTO.email;
     user.password = await generateHash(registterDTO.password);
     user.phoneNumber = registterDTO.phoneNumber as string; // encrypt [Remember]
-    user.gender = GENDER_TYPES.male;
+    user.gender =registterDTO.gender|| GENDER_TYPES.male;
     user.role = SYS_ROLES.user;
     user.userAgent = USER_AGENT.local;
     user.otp = generateOtp();

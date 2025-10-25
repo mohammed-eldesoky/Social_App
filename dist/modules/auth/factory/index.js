@@ -13,7 +13,7 @@ class AuthFactory {
         user.email = registterDTO.email;
         user.password = await (0, hash_1.generateHash)(registterDTO.password);
         user.phoneNumber = registterDTO.phoneNumber; // encrypt [Remember]
-        user.gender = enum_1.GENDER_TYPES.male;
+        user.gender = registterDTO.gender || enum_1.GENDER_TYPES.male;
         user.role = enum_1.SYS_ROLES.user;
         user.userAgent = enum_1.USER_AGENT.local;
         user.otp = (0, otp_1.generateOtp)();
