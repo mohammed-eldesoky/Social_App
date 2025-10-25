@@ -19,7 +19,7 @@ function bootstrap(app, express) {
     app.use("/user", modules_1.userRouter);
     //posts
     app.use("/post", modules_1.postRouter);
-    //comments  
+    //comments
     app.use("/comment", modules_1.commentRouter);
     //chat
     app.use("/chat", modules_1.chatRouter);
@@ -27,7 +27,17 @@ function bootstrap(app, express) {
     app.use("/request", modules_1.requestRouter);
     //messages
     //graphql
-    app.all("/graphql", (0, express_1.createHandler)({ schema: graphql_schema_1.graphqlSchema }));
+    app.all("/graphql", (0, express_1.createHandler)({
+        schema: graphql_schema_1.graphqlSchema,
+        formatError: (error) => {
+            return {
+                message: error.message,
+                success: false,
+                errorDettails: error.originalError,
+                path: error.path,
+            };
+        },
+    }));
     app.use("/{*dummy}", (req, res, next) => {
         return res.status(404).json({ message: "invalid roueter", success: false });
     });
