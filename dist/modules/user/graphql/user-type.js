@@ -8,7 +8,7 @@ exports.userType = new graphql_1.GraphQLObjectType({
         _id: { type: graphql_1.GraphQLID },
         fullName: { type: graphql_1.GraphQLString },
         email: { type: graphql_1.GraphQLString },
-        createdAt: { type: graphql_1.GraphQLString },
-        updatedAt: { type: graphql_1.GraphQLString },
+        createdAt: { type: graphql_1.GraphQLString, resolve: (user) => user.createdAt.toISOString() },
+        updatedAt: { type: graphql_1.GraphQLString, resolve: (user) => user.updatedAt.toISOString() },
     },
 });

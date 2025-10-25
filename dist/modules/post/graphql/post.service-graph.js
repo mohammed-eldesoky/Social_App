@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSpecificPost = void 0;
+exports.getAllposts = exports.getSpecificPost = void 0;
 const DB_1 = require("../../../DB");
 const utils_1 = require("../../../utils");
 const getSpecificPost = async (parent, args) => {
@@ -19,3 +19,14 @@ const getSpecificPost = async (parent, args) => {
     }; //{_id, content, ...}
 };
 exports.getSpecificPost = getSpecificPost;
+// ___________________get all posts
+const getAllposts = async () => {
+    const postRepositoryost = new DB_1.PostRepository();
+    const posts = await postRepositoryost.getAll({}, {}, { populate: [{ path: "userId" }] });
+    return {
+        message: "done",
+        success: true,
+        data: posts
+    }; //{_id, content, ...}
+};
+exports.getAllposts = getAllposts;

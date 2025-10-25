@@ -11,25 +11,25 @@ exports.postType = new graphql_1.GraphQLObjectType({
         userId: {
             type: user_type_1.userType
         },
-        createdAt: { type: graphql_1.GraphQLString },
-        updatedAt: { type: graphql_1.GraphQLString },
+        createdAt: { type: graphql_1.GraphQLString, resolve: (post) => post.createdAt.toISOString() },
+        updatedAt: { type: graphql_1.GraphQLString, resolve: (post) => post.updatedAt.toISOString() },
     },
 });
 //________________postResponse______
 exports.postResponseType = new graphql_1.GraphQLObjectType({
     name: "GetPost",
     fields: {
-        message: { type: graphql_1.GraphQLID },
-        success: { type: graphql_1.GraphQLID },
+        message: { type: graphql_1.GraphQLString },
+        success: { type: graphql_1.GraphQLBoolean },
         data: { type: exports.postType }
     }
 });
 //___________________postsResponse____
 exports.postsResponseType = new graphql_1.GraphQLObjectType({
-    name: "GetPost",
+    name: "GetPosts",
     fields: {
-        message: { type: graphql_1.GraphQLID },
-        success: { type: graphql_1.GraphQLID },
+        message: { type: graphql_1.GraphQLString },
+        success: { type: graphql_1.GraphQLBoolean },
         data: { type: new graphql_1.GraphQLList(exports.postType) }
     }
 });

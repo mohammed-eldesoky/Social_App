@@ -12,6 +12,10 @@ exports.postQuery = {
             id: { type: graphql_1.GraphQLID },
         },
         resolve: post_service_graph_1.getSpecificPost
-    }
+    },
     //getPosts: {},//
+    getPosts: {
+        type: post_type_1.postsResponseType,
+        resolve: post_service_graph_1.getAllposts
+    }
 };

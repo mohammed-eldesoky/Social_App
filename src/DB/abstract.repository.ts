@@ -25,7 +25,15 @@ export abstract class AbstractRepository<T> {
     return await this.model.findOne(filter, projection, options);
   }
   //________________________________________________________
-    async exist(
+  async getAll(
+    filter: RootFilterQuery<T>,
+    projection?: ProjectionType<T>,
+    options?: QueryOptions<T>
+  ) {
+    return await this.model.find(filter, projection, options);
+  }
+  //________________________________________________________
+  async exist(
     filter: RootFilterQuery<T>,
     projection?: ProjectionType<T>,
     options?: QueryOptions<T>
@@ -33,15 +41,15 @@ export abstract class AbstractRepository<T> {
     return await this.model.findOne(filter, projection, options);
   }
   //________________________________________________________
- async update(
+  async update(
     filter: RootFilterQuery<T>,
     update: UpdateQuery<T>,
     option?: MongooseUpdateQueryOptions<T>
   ) {
-   await this.model.updateOne(filter, update, option);
+    await this.model.updateOne(filter, update, option);
   }
   //________________________________________________________
   async delete(filter: RootFilterQuery<T>) {
-  await this.model.deleteOne(filter);
+    await this.model.deleteOne(filter);
   }
 }

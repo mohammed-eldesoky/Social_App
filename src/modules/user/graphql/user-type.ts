@@ -8,7 +8,7 @@ export const userType =new GraphQLObjectType({
               fullName: { type: GraphQLString },
               email: { type: GraphQLString },
 
-              createdAt: { type: GraphQLString },
-              updatedAt: { type: GraphQLString },
+              createdAt: { type: GraphQLString,resolve: (user) => user.createdAt.toISOString() },
+              updatedAt: { type: GraphQLString ,resolve: (user) => user.updatedAt.toISOString() },
             },
           })

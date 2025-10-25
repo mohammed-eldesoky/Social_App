@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql"
+import { GraphQLBoolean, GraphQLID, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql"
 import { userType } from "../../user/graphql/user-type"
 
 
@@ -10,8 +10,8 @@ export const postType = new GraphQLObjectType({
         userId: {
           type: userType
         },
-        createdAt: { type: GraphQLString },
-        updatedAt: { type: GraphQLString },
+        createdAt: { type: GraphQLString ,resolve: (post) => post.createdAt.toISOString()},
+        updatedAt: { type: GraphQLString ,resolve: (post) => post.updatedAt.toISOString() },
       },
     })
 
@@ -20,8 +20,8 @@ export const postType = new GraphQLObjectType({
     export const postResponseType =new GraphQLObjectType ({
         name: "GetPost",
         fields: {
-            message: { type: GraphQLID },
-            success: { type: GraphQLID },
+            message: { type: GraphQLString },
+            success: { type: GraphQLBoolean },
             data: { type: postType }
         }
     })
@@ -30,10 +30,10 @@ export const postType = new GraphQLObjectType({
     //___________________postsResponse____
 
     export const postsResponseType =new GraphQLObjectType ({
-            name: "GetPost",
+            name: "GetPosts",
             fields: {
-                message: { type: GraphQLID },
-                success: { type: GraphQLID },
+                message: { type: GraphQLString },
+                success: { type: GraphQLBoolean },
                 data: { type: new GraphQLList(postType)}
             }
         })

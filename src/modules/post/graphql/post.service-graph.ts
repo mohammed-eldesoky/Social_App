@@ -23,3 +23,15 @@ export const getSpecificPost =async (parent, args) => {
       }; //{_id, content, ...}
     }
   
+
+    // ___________________get all posts
+
+    export const getAllposts =async () => {
+      const postRepositoryost = new PostRepository();
+      const posts = await postRepositoryost.getAll({},{},{populate:[{path:"userId"}]});
+      return {
+        message:"done",
+        success:true,
+        data:posts
+      }; //{_id, content, ...}
+    }

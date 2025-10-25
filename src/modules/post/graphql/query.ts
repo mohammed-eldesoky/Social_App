@@ -1,8 +1,8 @@
 // post query
 
 import { GraphQLID, GraphQLObjectType } from "graphql";
-import { postResponseType, postType } from "./post-type";
-import { getSpecificPost } from "./post.service-graph";
+import { postResponseType, postsResponseType, postType } from "./post-type";
+import { getAllposts, getSpecificPost } from "./post.service-graph";
 
 export const postQuery = {
   getPost: {
@@ -11,8 +11,12 @@ export const postQuery = {
       id: { type: GraphQLID },
     },
     resolve: getSpecificPost
-}
+},
   //getPosts: {},//
-  
+  getPosts: {
+    type:postsResponseType,
+    resolve:getAllposts
+    
+  }
 
 }
