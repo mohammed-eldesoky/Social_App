@@ -16,6 +16,10 @@ export const getSpecificPost =async (parent, args) => {
         throw new NotFoundException("post not found");
       }
 
-      return post; //{_id, content, ...}
+      return {
+        message:"done",
+        success:true,
+        data:post
+      }; //{_id, content, ...}
     }
   

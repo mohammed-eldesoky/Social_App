@@ -7,7 +7,7 @@ const post_type_1 = require("./post-type");
 const post_service_graph_1 = require("./post.service-graph");
 exports.postQuery = {
     getPost: {
-        type: post_type_1.postType,
+        type: post_type_1.postResponseType,
         args: {
             id: { type: graphql_1.GraphQLID },
         },
