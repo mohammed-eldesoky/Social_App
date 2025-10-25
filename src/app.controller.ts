@@ -3,7 +3,8 @@ import { authRouter, chatRouter, commentRouter, postRouter, requestRouter, userR
 import { connectDB } from "./DB";
 import { AppError } from "./utils";
 import cors from "cors";
-
+import { createHandler } from "graphql-http/lib/use/express";
+import { graphqlSchema } from "./graphql.schema";
 export function bootstrap(app:Express,express:any){
 //parsing data
 app.use(express.json());
@@ -23,7 +24,8 @@ app.use("/chat",chatRouter)
 //requests
 app.use("/request",requestRouter)
 //messages
-
+//graphql
+app.all("/graphql",createHandler({schema:graphqlSchema}) )
 app.use("/{*dummy}",(req,res,next)=>{
     return  res.status(404).json({ message: "invalid roueter",success:false });
 })
