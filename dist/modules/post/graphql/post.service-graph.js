@@ -4,10 +4,12 @@ exports.getAllposts = exports.getSpecificPost = void 0;
 const DB_1 = require("../../../DB");
 const middleware_1 = require("../../../middleware");
 const utils_1 = require("../../../utils");
+const post_validation_1 = require("./post.validation");
 const getSpecificPost = async (parent, args, context) => {
     //implement auth function> done  or throw error
     await (0, middleware_1.isAuthenticatedGraphql)(context);
     //implement validation function> done  or throw error
+    (0, middleware_1.isValidGraph)(post_validation_1.postValidation, args);
     const postRepositoryost = new DB_1.PostRepository();
     const post = await postRepositoryost.getOne({ _id: args.id }, {}, {
         populate: [{ path: "userId" }],

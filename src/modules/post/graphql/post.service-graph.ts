@@ -1,11 +1,13 @@
 import { PostRepository } from "../../../DB";
-import { isAuthenticatedGraphql } from "../../../middleware";
+import { isAuthenticatedGraphql, isValidGraph } from "../../../middleware";
 import { NotFoundException } from "../../../utils";
+import { postValidation } from "./post.validation";
 
 export const getSpecificPost = async (parent, args, context) => {
   //implement auth function> done  or throw error
   await isAuthenticatedGraphql(context);
   //implement validation function> done  or throw error
+  isValidGraph(postValidation,args)
   const postRepositoryost = new PostRepository();
   const post = await postRepositoryost.getOne(
     { _id: args.id },
