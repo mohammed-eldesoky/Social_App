@@ -9,9 +9,19 @@ const initSocket = (server) => {
     const io = new socket_io_1.Server(server, { cors: { origin: "*" } });
     io.use(middleware_1.socketAuth);
     io.on("connection", (socket) => {
-        connectedUsers.set(socket.data.user.id, socket.id);
+        const userId = socket.data.user.id;
+        connectedUsers.set(userId, socket.id);
+        // tell all users that a  user connected
+        io.emit("userStatus", { userId, status: "online" });
+        // disconnect
+        socket.on("disconnect", () => {
+            connectedUsers.delete(userId);
+            io.emit("userStatus", { userId, status: "offline" });
+        });
         console.log("new user connected");
         socket.on("sendMessage", (0, chat_1.sendMessage)(socket, io, connectedUsers)); // callback (data)=>{}
+        socket.on("typing", (0, chat_1.handleTyping)(socket, io, connectedUsers));
+        socket.on("stopTyping", (0, chat_1.handleStopTyping)(socket, io, connectedUsers));
     }); //emit by frontend
 };
 exports.initSocket = initSocket;
