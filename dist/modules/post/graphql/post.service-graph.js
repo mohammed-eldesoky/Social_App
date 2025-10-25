@@ -2,8 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllposts = exports.getSpecificPost = void 0;
 const DB_1 = require("../../../DB");
+const middleware_1 = require("../../../middleware");
 const utils_1 = require("../../../utils");
-const getSpecificPost = async (parent, args) => {
+const getSpecificPost = async (parent, args, context) => {
+    //implement auth function> done  or throw error
+    await (0, middleware_1.isAuthenticatedGraphql)(context);
+    //implement validation function> done  or throw error
     const postRepositoryost = new DB_1.PostRepository();
     const post = await postRepositoryost.getOne({ _id: args.id }, {}, {
         populate: [{ path: "userId" }],
@@ -15,7 +19,7 @@ const getSpecificPost = async (parent, args) => {
     return {
         message: "done",
         success: true,
-        data: post
+        data: post,
     }; //{_id, content, ...}
 };
 exports.getSpecificPost = getSpecificPost;
@@ -26,7 +30,7 @@ const getAllposts = async () => {
     return {
         message: "done",
         success: true,
-        data: posts
+        data: posts,
     }; //{_id, content, ...}
 };
 exports.getAllposts = getAllposts;

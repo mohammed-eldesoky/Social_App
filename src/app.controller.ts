@@ -50,6 +50,12 @@ export function bootstrap(app: Express, express: any) {
           path: error.path,
         } as unknown as GraphQLError;
       },
+      context: ( req ) => {
+        const token = req.headers['authorization'];
+        return {
+          token,
+        };
+      },
     })
   );
   app.use("/{*dummy}", (req, res, next) => {

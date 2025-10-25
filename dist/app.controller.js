@@ -37,6 +37,12 @@ function bootstrap(app, express) {
                 path: error.path,
             };
         },
+        context: (req) => {
+            const token = req.headers['authorization'];
+            return {
+                token,
+            };
+        },
     }));
     app.use("/{*dummy}", (req, res, next) => {
         return res.status(404).json({ message: "invalid roueter", success: false });
