@@ -4,6 +4,7 @@ import { GENDER_TYPES, USER_AGENT } from "../../utils";
 import {
   ForgetPasswordDTO,
   LoginDTO,
+  LogoutDTO,
   RefreshTokenDTO,
   RegistterDTO,
   UpdateBasicInfoDTO,
@@ -79,4 +80,9 @@ export const forgetPasswordSchema = z.object<ForgetPasswordDTO>({
 // refresh token validation schema
 export const refreshTokenSchema = z.object<RefreshTokenDTO>({
   refreshToken:z.string() as unknown as string,
+});
+
+// logout validation schema
+export const logoutSchema = z.object<LogoutDTO>({
+  refreshToken: z.string() as unknown as string,
 });

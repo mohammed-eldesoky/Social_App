@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   ForgetPasswordDTO,
   LoginDTO,
+  LogoutDTO,
   RefreshTokenDTO,
   RegistterDTO,
   UpdateBasicInfoDTO,
@@ -97,7 +98,7 @@ class AuthService {
     //4-generate access token
     const accessToken = generateToken({
       payload: { _id: user._id, role: user.role },
-      options: { expiresIn: "1m" },
+      options: { expiresIn: "1d" },
     });
 
     //generate refresh token
@@ -382,6 +383,28 @@ class AuthService {
       data: { accessToken, refreshToken: newRefreshToken },
     });
   };
+
+//__________________________________________________________________________________________________
+  logout = async (req: Request, res: Response, next: NextFunction) => {
+    const logoutDTO: LogoutDTO = req.body;
+    //check if refresh token exists
+    const tokenExist = await Token.findOne({
+      token: logoutDTO.refreshToken,
+      type: TOKEN_TYPES.refresh,
+      user: req.user._id,
+    });
+    if(!tokenExist){
+      throw new BadRequestException("Refresh token is required");
+    }
+    //delete refresh token from db
+    await Token.deleteMany({ user: req.user._id ,type:TOKEN_TYPES.refresh});
+    //send response
+    return res.status(200).json({
+      message: "Logged out successfully",
+      success: true,
+    });
+  }
+
 }
 
 export default new AuthService(); //single ton

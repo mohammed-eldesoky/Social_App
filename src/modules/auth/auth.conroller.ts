@@ -49,6 +49,13 @@ router.post(
   authService.refreshToken
 );
 
+//_______________ logout route ______________________//
+router.post(
+  "/logout",
+  isAuthenticated(),
+  isValid(authvalidation.logoutSchema),
+  authService.logout
+);
 //________________________________________________________________
 // simulate : problem (this)
 //route >is  {} > from authService is a {} too > inside it a method register

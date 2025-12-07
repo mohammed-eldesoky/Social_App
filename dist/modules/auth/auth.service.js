@@ -67,7 +67,7 @@ class AuthService {
         //4-generate access token
         const accessToken = (0, utils_1.generateToken)({
             payload: { _id: user._id, role: user.role },
-            options: { expiresIn: "1m" },
+            options: { expiresIn: "1d" },
         });
         //generate refresh token
         const refreshToken = (0, utils_1.generateToken)({
@@ -299,6 +299,26 @@ class AuthService {
             message: "Token refreshed successfully",
             success: true,
             data: { accessToken, refreshToken: newRefreshToken },
+        });
+    };
+    //__________________________________________________________________________________________________
+    logout = async (req, res, next) => {
+        const logoutDTO = req.body;
+        //check if refresh token exists
+        const tokenExist = await token_model_1.default.findOne({
+            token: logoutDTO.refreshToken,
+            type: utils_1.TOKEN_TYPES.refresh,
+            user: req.user._id,
+        });
+        if (!tokenExist) {
+            throw new utils_1.BadRequestException("Refresh token is required");
+        }
+        //delete refresh token from db
+        await token_model_1.default.deleteMany({ user: req.user._id, type: utils_1.TOKEN_TYPES.refresh });
+        //send response
+        return res.status(200).json({
+            message: "Logged out successfully",
+            success: true,
         });
     };
 }

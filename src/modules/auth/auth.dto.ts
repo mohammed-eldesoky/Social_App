@@ -50,3 +50,8 @@ export interface ForgetPasswordDTO {
 export interface RefreshTokenDTO {
   refreshToken: string;
 }
+
+//_____________________logout ______________________//
+export interface LogoutDTO {
+  refreshToken: string;
+}

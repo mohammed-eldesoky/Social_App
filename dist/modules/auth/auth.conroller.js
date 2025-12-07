@@ -56,6 +56,8 @@ router.post("/send-otp", (0, middleware_1.isValid)(authvalidation.sendOtpSchema)
 router.put("/forget-password", (0, middleware_1.isValid)(authvalidation.forgetPasswordSchema), auth_service_1.default.forgetPassword);
 //_______________ refresh token route ______________________//
 router.post("/refresh-token", (0, middleware_1.isValid)(authvalidation.refreshTokenSchema), auth_service_1.default.refreshToken);
+//_______________ logout route ______________________//
+router.post("/logout", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(authvalidation.logoutSchema), auth_service_1.default.logout);
 //________________________________________________________________
 // simulate : problem (this)
 //route >is  {} > from authService is a {} too > inside it a method register

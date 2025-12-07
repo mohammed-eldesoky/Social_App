@@ -7,13 +7,14 @@ exports.TokenSchema = new mongoose_1.Schema({
     token: String,
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
     type: {
         type: String,
         enum: utils_1.TOKEN_TYPES,
     },
     expiresAt: {
-        type: Date
-    }
+        type: Date,
+    },
 }, { timestamps: true });
+exports.TokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index to auto-delete expired tokens
