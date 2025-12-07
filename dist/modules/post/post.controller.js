@@ -15,6 +15,8 @@ router.post("/", (0, middleware_1.isAuthenticated)(), (0, middleware_1.isValid)(
 router.patch("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.reactPost);
 // get specific post
 router.get("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.getSpecificPost);
+// get all posts
+router.get("/", post_service_1.default.getAllPosts);
 // delete post
 router.delete("/:id", (0, middleware_1.isAuthenticated)(), post_service_1.default.deletePost);
 // freeze post

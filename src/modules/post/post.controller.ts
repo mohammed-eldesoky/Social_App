@@ -4,16 +4,23 @@ import postService from "./post.service";
 import { commentRouter } from "..";
 import { createPostSchema, updatePostSchema } from "./post.vallidation";
 
-
 const router = Router();
 //create post
-router.post("/", isAuthenticated(),isValid(createPostSchema),postService.createPost);
+router.post(
+  "/",
+  isAuthenticated(),
+  isValid(createPostSchema),
+  postService.createPost
+);
 
 // react to post
 router.patch("/:id", isAuthenticated(), postService.reactPost);
 
 // get specific post
 router.get("/:id", isAuthenticated(), postService.getSpecificPost);
+
+// get all posts
+router.get("/", postService.getAllPosts);
 
 // delete post
 router.delete("/:id", isAuthenticated(), postService.deletePost);
@@ -22,7 +29,13 @@ router.delete("/:id", isAuthenticated(), postService.deletePost);
 router.patch("/:id/freeze", isAuthenticated(), postService.freezePost);
 
 // update post
-router.patch("/:id/update", isAuthenticated(),isValid(updatePostSchema),postService.updatePost);
+router.patch(
+  "/:id/update",
+  isAuthenticated(),
+  isValid(updatePostSchema),
+  postService.updatePost
+);
+
 /**
  * @route_Comment
  */

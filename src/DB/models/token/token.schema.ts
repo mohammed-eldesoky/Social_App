@@ -14,8 +14,9 @@ export const TokenSchema = new Schema<Itoken>(
     },
     expiresAt: {
       type: Date,
+      expires: 0,// TTL index
     },
   },
   { timestamps: true }
 );
-TokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index to auto-delete expired tokens
+

@@ -33,5 +33,9 @@ class AbstractRepository {
     async delete(filter) {
         await this.model.deleteOne(filter);
     }
+    //________________________________________________________
+    async countDocuments(filter = {}) {
+        return await this.model.countDocuments(filter);
+    }
 }
 exports.AbstractRepository = AbstractRepository;

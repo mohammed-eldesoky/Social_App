@@ -52,4 +52,9 @@ export abstract class AbstractRepository<T> {
   async delete(filter: RootFilterQuery<T>) {
     await this.model.deleteOne(filter);
   }
+
+  //________________________________________________________
+  async countDocuments(filter: RootFilterQuery<T> = {}) {
+    return await this.model.countDocuments(filter);
+  }
 }
