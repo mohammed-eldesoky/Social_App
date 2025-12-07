@@ -54,7 +54,13 @@ class AuthService {
     const createdUserdoc = await this.userRepository.create(user);
     //convert to plain object
     const createdUser = createdUserdoc.toObject();
-
+    //hide internal data
+    createdUser.otp = undefined;
+    createdUser.password = undefined;
+    createdUser.otpExpiryAt = undefined;
+    createdUser.isVerified = undefined;
+    createdUser.__v = undefined;
+    createdUser._id = undefined;
     //send response
 
     return res.status(201).json({
@@ -296,9 +302,11 @@ class AuthService {
 
   forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
     //get data from req
-    const forgetPasswordDTO:ForgetPasswordDTO = req.body;
+    const forgetPasswordDTO: ForgetPasswordDTO = req.body;
     //check user existance
-    const userExist = await this.userRepository.exist({ email: forgetPasswordDTO.email });
+    const userExist = await this.userRepository.exist({
+      email: forgetPasswordDTO.email,
+    });
     //fail case
     if (!userExist) {
       throw new NotFoundException("User not found");
