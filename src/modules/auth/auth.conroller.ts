@@ -42,6 +42,12 @@ router.put(
   authService.forgetPassword
 );
 
+//_______________ refresh token route ______________________//
+router.post(
+  "/refresh-token",
+  isValid(authvalidation.refreshTokenSchema),
+  authService.refreshToken
+);
 
 //________________________________________________________________
 // simulate : problem (this)

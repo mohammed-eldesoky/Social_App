@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forgetPasswordSchema = exports.sendOtpSchema = exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
+exports.refreshTokenSchema = exports.forgetPasswordSchema = exports.sendOtpSchema = exports.updateBasicInfoSchema = exports.updatePasswordSchema = exports.verifyAccountSchema = exports.loginSchema = exports.registerSchema = void 0;
 const zod_1 = require("zod");
 const utils_1 = require("../../utils");
 // register validaton  schema
@@ -54,4 +54,8 @@ exports.forgetPasswordSchema = zod_1.z.object({
     email: zod_1.z.email(),
     otp: zod_1.z.string().min(6).max(10),
     newPassword: zod_1.z.string().min(6).max(30),
+});
+// refresh token validation schema
+exports.refreshTokenSchema = zod_1.z.object({
+    refreshToken: zod_1.z.string(),
 });

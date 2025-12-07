@@ -44,3 +44,9 @@ export interface ForgetPasswordDTO {
   newPassword: string;
 
 }
+
+// _____________________refresh Token ______________________//
+
+export interface RefreshTokenDTO {
+  refreshToken: string;
+}

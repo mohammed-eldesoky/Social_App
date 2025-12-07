@@ -67,7 +67,7 @@ class AuthService {
         //4-generate access token
         const accessToken = (0, utils_1.generateToken)({
             payload: { _id: user._id, role: user.role },
-            options: { expiresIn: "1d" },
+            options: { expiresIn: "1m" },
         });
         //generate refresh token
         const refreshToken = (0, utils_1.generateToken)({
@@ -256,6 +256,49 @@ class AuthService {
         return res.status(200).json({
             message: "Password updated successfully",
             success: true,
+        });
+    };
+    //__________________________________________________________________________________________________
+    refreshToken = async (req, res, next) => {
+        const refreshTokenDto = req.body;
+        if (!refreshTokenDto.refreshToken) {
+            throw new utils_1.BadRequestException("Refresh token is required");
+        }
+        //verify refresh token
+        const decoded = (0, utils_1.verifyToken)(refreshTokenDto.refreshToken);
+        //check if token exists in db
+        const tokenExist = await token_model_1.default.findOne({
+            token: refreshTokenDto.refreshToken,
+            type: utils_1.TOKEN_TYPES.refresh,
+            user: decoded._id,
+        });
+        //fail case
+        if (!tokenExist) {
+            throw new utils_1.ForbiddentException("Invalid refresh token");
+        }
+        //check expiry
+        if (tokenExist.expiresAt < new Date()) {
+            await token_model_1.default.deleteOne();
+            throw new utils_1.ForbiddentException("Refresh token expired");
+        }
+        //generate new access token
+        const accessToken = (0, utils_1.generateToken)({
+            payload: { _id: decoded._id, role: decoded.role },
+            options: { expiresIn: "1d" },
+        });
+        //roate refresh token to use again
+        const newRefreshToken = (0, utils_1.generateToken)({
+            payload: { _id: decoded._id, role: decoded.role },
+            options: { expiresIn: "7d" },
+        });
+        tokenExist.token = newRefreshToken;
+        tokenExist.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+        await tokenExist.save();
+        //send response
+        return res.status(200).json({
+            message: "Token refreshed successfully",
+            success: true,
+            data: { accessToken, refreshToken: newRefreshToken },
         });
     };
 }
